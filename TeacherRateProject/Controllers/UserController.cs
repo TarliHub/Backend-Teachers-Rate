@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TeacherRateProject.Data.Repository.Interfaces;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using TeacherRateProject.Data.UnitOfWork;
+using TeacherRateProject.DTOs;
 using TeacherRateProject.Models;
 
 namespace TeacherRateProject.Controllers
@@ -8,17 +10,19 @@ namespace TeacherRateProject.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IUserRepository<User, int> _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public UserController(IUserRepository<User, int> userRepository)
+        public UserController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetAllUsers()
+        public async Task<ActionResult<List<UserDto>>> GetAllUsers()
         {
-            var users = await _userRepository.GetAllUsers();
+            var users = await _unitOfWork.User.GetAll();
 
             return Ok(users);
         }
@@ -26,15 +30,16 @@ namespace TeacherRateProject.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(int id)
         {
-            var user = await _userRepository.GetUserById(id);
+            var user = await _unitOfWork.User.GetById(id);
 
             return Ok(user);
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> AddUser(User user)
+        public async Task<ActionResult<User>> AddUser(UserDto user)
         {
-            var addedUser = await _userRepository.AddUser(user);
+            var addedUser = await _unitOfWork.User.Add(_mapper.Map<User>(user));
+            _unitOfWork.Save();
 
             return Ok(addedUser);
         }

@@ -1,8 +1,8 @@
-﻿namespace TeacherRateProject.Data.Repository.Interfaces;
+﻿using TeacherRateProject.Data.Repository.Interfaces.Base;
+using TeacherRateProject.Models;
 
-public interface IUserRepository<T, TKey> where T : class
+namespace TeacherRateProject.Data.Repository.Interfaces;
+
+public interface IUserRepository : IGenericRepository<User, int> 
 {
-    Task<IEnumerable<T>> GetAllUsers();
-    Task<T> GetUserById(TKey id);
-    Task<T> AddUser(T user);
 }
