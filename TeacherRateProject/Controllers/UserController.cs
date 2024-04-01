@@ -1,12 +1,12 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TeacherRateProject.DTOs;
 using TeacherRateProject.Models;
+using TeacherRateProject.Models.Paging;
 using TeacherRateProject.Services.Interfaces;
 
 namespace TeacherRateProject.Controllers
 {
-    [Route("api/user")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -17,13 +17,13 @@ namespace TeacherRateProject.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<UserDto>>> GetAllUsers()
-        {
-            var users = await _userService.GetAll();
+        //[HttpGet]
+        //public async Task<ActionResult<List<UserDto>>> GetAllUsers()
+        //{
+        //    var users = await _userService.GetAll();
 
-            return Ok(users);
-        }
+        //    return Ok(users);
+        //}
 
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(int id)
@@ -41,11 +41,17 @@ namespace TeacherRateProject.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetPagesUsers(int pageIndex, int pageSize)
+        public async Task<ActionResult<PageList<UserDto>>> GetPagesUsers([FromQuery] PagingParameters paging)
         {
-            var users = await _userService.GetPaged(pageIndex, pageSize);
+            var users = await _userService.GetPaged(paging.PageIndex, paging.PageSize);
+            var page = new PageList<UserDto>()
+            {
+                Items = new(users),
+                PageIndex = paging.PageIndex,
+                PageSize = paging.PageSize
+            };
 
-            return Ok(users);
+            return Ok(page);
         }
 
         [HttpPost]
