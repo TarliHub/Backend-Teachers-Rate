@@ -1,5 +1,4 @@
 ﻿using TeacherRateProject.DTOs;
-using TeacherRateProject.Models;
 
 namespace TeacherRateProject.Services.Interfaces;
 
@@ -12,4 +11,6 @@ public interface IUserService<T, TKey>
     Task<T> Add(T user);
     Task Delete(TKey id);
     Task Update(TKey id, T user);
+    Task<CompletedTaskDto> AddTaskToUser(int userId, PostCompletedTaskDto task);
+    Task<IEnumerable<CompletedTaskDto>> GetUserTasks(int userId);
 }

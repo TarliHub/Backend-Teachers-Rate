@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using TeacherRateProject.Data.Repository.Interfaces;
 using TeacherRateProject.Data.UnitOfWork;
 using TeacherRateProject.DTOs;
 using TeacherRateProject.Models;
@@ -29,6 +28,27 @@ namespace TeacherRateProject.Services
             return _mapper.Map<UserDto>(userFromDB);
         }
 
+        public async Task<CompletedTaskDto> AddTaskToUser(int userId, PostCompletedTaskDto task)
+        {
+            var user = await _unitOfWork.User.GetById(userId);
+            var ratingTask = await _unitOfWork.RatingTask.GetById(task.TaskId);
+
+            var completedTask = new CompletedTask()
+            {
+                Task = ratingTask,
+                ActualRating = task.ActualRating,
+            };
+
+            await _unitOfWork.CompletedTask.Add(completedTask);
+
+            user.Tasks.Add(completedTask);
+
+            await _unitOfWork.User.Update(user.Id, user);
+            _unitOfWork.Save();
+
+            return _mapper.Map<CompletedTaskDto>(completedTask);
+        }
+
         public async Task Delete(int id)
         {
             await _unitOfWork.User.Delete(id);
@@ -46,9 +66,17 @@ namespace TeacherRateProject.Services
             return _mapper.Map<UserDto>(await _unitOfWork.User.GetById(id));
         }
 
-        public Task<IEnumerable<UserDto>> GetPaged(int page, int pageSize)
+        public async Task<IEnumerable<UserDto>> GetPaged(int page, int pageSize)
         {
-            throw new NotImplementedException();
+            return (await _unitOfWork.User.GetPaged(page, pageSize))
+                .Select(_mapper.Map<UserDto>);
+        }
+
+        public async Task<IEnumerable<CompletedTaskDto>> GetUserTasks(int userId)
+        {
+            var user = await _unitOfWork.User.GetById(userId);
+
+            return user.Tasks.Select(_mapper.Map<CompletedTaskDto>);
         }
 
         public bool IsUserDtoValid(UserDto user)
@@ -66,9 +94,9 @@ namespace TeacherRateProject.Services
             throw new NotImplementedException();
         }
 
-        public Task Update(int id, UserDto user)
+        public async Task Update(int id, UserDto user)
         {
-            throw new NotImplementedException();
+            await _unitOfWork.User.Update(id, _mapper.Map<User>(user));
         }
     }
 }

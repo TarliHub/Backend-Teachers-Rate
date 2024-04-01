@@ -12,5 +12,8 @@ public static class CompositionRoot
     {
         services.AddTransient<IUserRepository, UserRepository>();
         services.AddTransient<IUserService<UserDto, int>, UserService>();
+
+        services.AddTransient<IRatingTaskRepository, RatingTaskRepository>();
+        services.AddTransient<IRatingTaskService<RatingTaskDto, int>, RatingTaskService>();
     }
 }

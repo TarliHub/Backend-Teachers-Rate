@@ -11,8 +11,12 @@ public class UnitOfWork : IUnitOfWork
     {
         _context = context;
         User = new UserRepository(_context);
+        RatingTask = new RatingTaskRepository(_context);
+        CompletedTask = new CompletedTaskRepository(_context);
     }
     public IUserRepository User { get; private set; }
+    public IRatingTaskRepository RatingTask { get; private set; }
+    public ICompletedTaskRepository CompletedTask { get; private set; }
 
     public void Dispose()
     {

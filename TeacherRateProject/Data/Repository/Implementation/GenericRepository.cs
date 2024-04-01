@@ -49,7 +49,6 @@ public class GenericRepository<T> : IGenericRepository<T, int> where T : class
 
     public async Task Update(int id, T entity)
     {
-        //TODO: change update
         var oldEntity = await GetById(id);
         oldEntity = entity;
         _context.Set<T>().Update(oldEntity);

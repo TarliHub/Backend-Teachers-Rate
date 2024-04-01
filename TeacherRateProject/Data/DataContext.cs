@@ -15,4 +15,8 @@ public class DataContext : DbContext
     }
 
     public DbSet<User> User { get; set; } = default!;
+    public DbSet<RatingTask> RatingTask { get; set; } = default!;
+    public DbSet<CompletedTask> CompletedTask { get; set; } = default!;
+    public DbSet<TaskApprove> TaskApprove { get; set; } = default!;
+    public DbSet<TaskCategory> TaskCategory { get; set; } = default!;
 }
