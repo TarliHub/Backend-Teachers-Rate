@@ -18,7 +18,9 @@ public class UserDto
     [Required]
     [MaxLength(64)]
     public required string Password { get; set; }
-    public DateTime RegistredAt { get; set; }
+    public DateTime RegisteredAt { get; set; }
 
     public Role Role { get; set; }
+
+    public int Rating { get; set; }
 }

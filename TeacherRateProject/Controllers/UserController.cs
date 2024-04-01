@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using TeacherRateProject.Data.UnitOfWork;
+﻿using Microsoft.AspNetCore.Mvc;
 using TeacherRateProject.DTOs;
 using TeacherRateProject.Models;
 using TeacherRateProject.Services.Interfaces;

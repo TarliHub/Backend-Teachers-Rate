@@ -5,7 +5,7 @@ namespace TeacherRateProject.Data.Repository.Implementation;
 
 public class GenericRepository<T> : IGenericRepository<T, int> where T : class
 {
-    private readonly DataContext _context;
+    protected readonly DataContext _context;
 
     public GenericRepository(DataContext context)
     {
@@ -49,6 +49,7 @@ public class GenericRepository<T> : IGenericRepository<T, int> where T : class
 
     public async Task Update(int id, T entity)
     {
+        //TODO: change update
         var oldEntity = await GetById(id);
         oldEntity = entity;
         _context.Set<T>().Update(oldEntity);

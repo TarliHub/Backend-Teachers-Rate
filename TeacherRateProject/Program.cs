@@ -1,13 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using TeacherRateProject.Data;
-using TeacherRateProject.Data.Repository.Interfaces;
-using TeacherRateProject.Data.Repository.SqlRepository;
 using TeacherRateProject.Data.UnitOfWork;
-using TeacherRateProject.DTOs;
 using TeacherRateProject.Helpers;
-using TeacherRateProject.Services;
-using TeacherRateProject.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
