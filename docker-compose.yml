@@ -5,4 +5,4 @@ services:
     image: ${DOCKER_REGISTRY-}teacherrateproject
     build:
       context: .
-      dockerfile: TeacherRateProject\Dockerfile
+      dockerfile: TeacherRateProject/Dockerfile
