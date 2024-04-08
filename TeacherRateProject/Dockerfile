@@ -6,8 +6,6 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-#RUN sed -i 's/CipherString = DEFAULT@SECLEVEL=2/CipherString = DEFAULT@SECLEVEL=1/g' /etc/ssl/openssl.cnf
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -25,4 +23,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
+RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /etc/ssl/openssl.cnf
 ENTRYPOINT ["dotnet", "TeacherRateProject.dll"]

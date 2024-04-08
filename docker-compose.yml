@@ -6,9 +6,9 @@ networks:
 services:
   demoappdb:
     container_name: app-db
-    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    image: "mcr.microsoft.com/mssql/server:2017-latest-ubuntu"
     ports:
-      - 8002:1433
+      - 1433:1433
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=password@12345#
@@ -23,7 +23,8 @@ services:
       context: .
       dockerfile: TeacherRateProject/Dockerfile
     ports:
-      - 8001:80
+      - "8080:8080"
+      - "8081:8081"
     depends_on:
       - demoappdb
     environment:
