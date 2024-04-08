@@ -1,8 +1,34 @@
 version: '3.4'
 
+networks:
+  teacherratebackend:
+
 services:
+  demoappdb:
+    container_name: app-db
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+      - 8002:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=password@12345#
+      - MSSQL_PID=Express
+    networks:
+      - teacherratebackend
+       
   teacherrateproject:
+    container_name: teacher-rate-backend
     image: ${DOCKER_REGISTRY-}teacherrateproject
     build:
       context: .
       dockerfile: TeacherRateProject/Dockerfile
+    ports:
+      - 8001:80
+    depends_on:
+      - demoappdb
+    environment:
+      - DB_HOST=demoappdb
+      - DB_NAME=TeacherRateDB
+      - DB_PASSWORD=password@12345#
+    networks:
+      - teacherratebackend
