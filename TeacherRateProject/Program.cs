@@ -12,13 +12,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddUserServices();
-builder.Services.AddDbContext<DataContext>(options =>
+builder.Services.AddEntityFrameworkNpgsql()
+    .AddDbContext<DataContext>(options =>
 {
-    //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
-    var dbName = Environment.GetEnvironmentVariable("DB_NAME");
-    var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
-    options.UseSqlServer($"Server={dbHost},1433;Database={dbName};Integrated Security=True;");
+    var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
+    var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
+    var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "TeachersRate";
+    var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "user";
+    var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "password12345";
+    options.UseNpgsql($"Host={dbHost}; Port={dbPort}; Database={dbName}; Username={dbUser}; Password={dbPassword};");
 });
 
 var app = builder.Build();
@@ -27,6 +29,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();

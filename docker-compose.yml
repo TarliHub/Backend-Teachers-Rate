@@ -1,20 +1,18 @@
 version: '3.4'
 
-networks:
-  teacherratebackend:
-
 services:
-  demoappdb:
-    container_name: app-db
-    image: "mcr.microsoft.com/mssql/server:2017-latest-ubuntu"
-    ports:
-      - 1433:1433
+  person.database:
+    image: postgres:latest
+    container_name: person.database
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=password@12345#
-      - MSSQL_PID=Express
-    networks:
-      - teacherratebackend
+      - POSTGRES_HOST=person.database
+      - POSTGRES_DB=TeachersRate
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password12345
+    # volumes:
+    #   - ./.containers/person-db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
        
   teacherrateproject:
     container_name: teacher-rate-backend
@@ -26,10 +24,10 @@ services:
       - "8080:8080"
       - "8081:8081"
     depends_on:
-      - demoappdb
+      - person.database
     environment:
-      - DB_HOST=demoappdb
-      - DB_NAME=TeacherRateDB
-      - DB_PASSWORD=password@12345#
-    networks:
-      - teacherratebackend
+      - DB_HOST=person.database
+      - DB_PORT=5432
+      - DB_NAME=TeachersRate
+      - DB_USER=user
+      - DB_PASSWORD=password12345
