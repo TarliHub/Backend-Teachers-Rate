@@ -43,15 +43,9 @@ namespace TeacherRateProject.Controllers
         [HttpGet]
         public async Task<ActionResult<PageList<UserDto>>> GetPagesUsers([FromQuery] PagingParameters paging)
         {
-            var users = await _userService.GetPaged(paging.PageIndex, paging.PageSize);
-            var page = new PageList<UserDto>()
-            {
-                Items = new(users),
-                PageIndex = paging.PageIndex,
-                PageSize = paging.PageSize
-            };
-
-            return Ok(page);
+            var pageList = await _userService.GetPaged(paging.PageIndex, paging.PageSize);
+            
+            return Ok(pageList);
         }
 
         [HttpPost]

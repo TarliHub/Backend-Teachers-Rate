@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TeacherRateProject.Data.Repository.Interfaces.Base;
+using TeacherRateProject.Models.Paging;
 
 namespace TeacherRateProject.Data.Repository.Implementation;
 
@@ -28,11 +29,20 @@ public class GenericRepository<T> : IGenericRepository<T, int> where T : class
         return await _context.Set<T>().ToListAsync();
     }
 
-    public async Task<IEnumerable<T>> GetPaged(int page, int pageSize)
+    public async Task<PageList<T>> GetPaged(int page, int pageSize)
     {
-        return await _context.Set<T>().Skip(page * pageSize)
+        int count = _context.Set<T>().Count();
+        var items = await _context.Set<T>().Skip(page * pageSize)
             .Take(pageSize)
             .ToListAsync();
+
+        return new()
+        {
+            Items = new List<T>(items),
+            PageSize = pageSize,
+            PageIndex = page,
+            PagesCount = count / pageSize
+        };
     }
 
     public async Task<T> GetById(int id)

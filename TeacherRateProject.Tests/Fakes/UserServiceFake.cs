@@ -1,5 +1,6 @@
 ﻿using TeacherRateProject.DTOs;
 using TeacherRateProject.Models;
+using TeacherRateProject.Models.Paging;
 using TeacherRateProject.Services.Interfaces;
 
 namespace TeacherRateProject.Tests.Fakes;
@@ -36,7 +37,7 @@ internal class UserServiceFake : IUserService<User, int>
         return _users.First(u => u.Id == id);
     }
 
-    public Task<IEnumerable<User>> GetPaged(int page, int pageSize)
+    public Task<PageList<User>> GetPaged(int page, int pageSize)
     {
         throw new NotImplementedException();
     }

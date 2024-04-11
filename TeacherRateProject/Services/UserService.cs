@@ -2,6 +2,7 @@
 using TeacherRateProject.Data.UnitOfWork;
 using TeacherRateProject.DTOs;
 using TeacherRateProject.Models;
+using TeacherRateProject.Models.Paging;
 using TeacherRateProject.Services.Interfaces;
 
 namespace TeacherRateProject.Services
@@ -66,10 +67,15 @@ namespace TeacherRateProject.Services
             return _mapper.Map<UserDto>(await _unitOfWork.User.GetById(id));
         }
 
-        public async Task<IEnumerable<UserDto>> GetPaged(int page, int pageSize)
+        public async Task<PageList<UserDto>> GetPaged(int page, int pageSize)
         {
-            return (await _unitOfWork.User.GetPaged(page, pageSize))
-                .Select(_mapper.Map<UserDto>);
+            var pageList = await _unitOfWork.User.GetPaged(page, pageSize);
+            return new(){
+                Items = new List<UserDto>(pageList.Items.Select(_mapper.Map<UserDto>)),
+                PagesCount = pageList.PagesCount,
+                PageIndex = pageList.PageIndex,
+                PageSize = pageSize,
+            };
         }
 
         public async Task<IEnumerable<CompletedTaskDto>> GetUserTasks(int userId)
