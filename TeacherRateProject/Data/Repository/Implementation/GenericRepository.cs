@@ -41,7 +41,7 @@ public class GenericRepository<T> : IGenericRepository<T, int> where T : class
             Items = new List<T>(items),
             PageSize = pageSize,
             PageIndex = page,
-            PagesCount = count / pageSize
+            PagesCount = (int)Math.Ceiling((double)count / pageSize),
         };
     }
 
