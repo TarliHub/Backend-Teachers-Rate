@@ -12,13 +12,13 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseAuthorization();
-
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseAuthorization();
 
         app.MapControllers();
 
