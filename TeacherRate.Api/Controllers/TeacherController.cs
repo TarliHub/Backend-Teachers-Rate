@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using TeacherRate.Api.DTOs;
+using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 
 namespace TeacherRate.Api.Controllers;
@@ -7,63 +10,53 @@ namespace TeacherRate.Api.Controllers;
 [ApiController]
 public class TeacherController : ControllerBase
 {
-    //[HttpGet]
-    //public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-    //{
-    //    return Ok(new List<User>
-    //    {
-    //        new()
-    //        {
-    //            Id = 1,
-    //            Name = "Test",
-    //            LastName = "Test",
-    //            Email = "Test",
-    //        }
-    //    });
-    //}
+    private readonly ITeacherService _teacherService;
+    private readonly IMapper _mapper;
+
+    public TeacherController(ITeacherService taskService, IMapper mapper)
+    {
+        _teacherService = taskService;
+        _mapper = mapper;
+    }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<User>> GetTeacher(int id)
+    public async Task<ActionResult<UserDTO>> GetTeacher(int id)
     {
-        return Ok(new User()
-        {
-            Id = 1,
-            Name = "Name",
-            LastName = "LastName",
-            Email = "test@test.com"
-        });
+        return Ok(await _teacherService.GetUserById(id));
     }
 
     [HttpGet("tasks")]
-    public async Task<ActionResult<IEnumerable<UserTask>>> GetTasks()
+    public async Task<ActionResult<IEnumerable<UserTaskDTO>>> GetTasks()
     {
-        var tasks = new List<UserTask>
-        {
-            new()
-            {
-                Id = 1,
-                Title = "Test Task",
-            }
-        };
+        var tasks = await _teacherService.GetTasks(0, 10);
 
-        return Ok(tasks);
+        return Ok(_mapper.Map<List<UserTaskDTO>>(tasks));
+    }
+
+    [HttpGet("completedTasks")]
+    public async Task<ActionResult<IEnumerable<CompletedTaskDTO>>> GetCompletedTasks()
+    {
+        var tasks = await _teacherService.GetCompletedTasks(0, 10);
+
+        return Ok(_mapper.Map<List<CompletedTaskDTO>>(tasks));
     }
 
     [HttpGet("tasks/{id}")]
-    public async Task<ActionResult<UserTask>> GetTask(int id)
+    public async Task<ActionResult<UserTaskDTO>> GetTask(int id)
     {
-        var task = new UserTask()
-        {
-            Id = 1,
-            Title = "Test Task",
-        };
+        var task = await _teacherService.GetTaskById(id);
 
-        return Ok(task);
+        return Ok(_mapper.Map<UserTaskDTO>(task));
     }
 
     [HttpPost("tasks")]
-    public async Task<ActionResult> SendTask([FromBody] UserTask task)
+    public async Task<ActionResult> SendTask(TeacherRequestDTO request)
     {
+        var isRequestSend = await _teacherService.SendTask(_mapper.Map<TeacherRequest>(request));
+
+        if (!isRequestSend) 
+            return BadRequest();
+
         return Ok();
     }
 }

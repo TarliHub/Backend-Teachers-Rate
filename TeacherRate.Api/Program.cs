@@ -7,6 +7,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();
+        builder.Services.AddDependencies();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
