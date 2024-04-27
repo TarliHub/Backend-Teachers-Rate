@@ -2,5 +2,5 @@
 
 public class Teacher : TeacherBase
 {
-    public virtual HeadTeacher HeadTeacher { get; set; }
+    public virtual HeadTeacher HeadTeacher { get; set; } = null!;
 }

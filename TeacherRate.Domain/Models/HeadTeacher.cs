@@ -2,5 +2,5 @@
 
 public class HeadTeacher : TeacherBase
 {
-    public virtual ICollection<Teacher> Teacher { get; set; }
+    public virtual ICollection<Teacher> Teacher { get; set; } = null!;
 }
