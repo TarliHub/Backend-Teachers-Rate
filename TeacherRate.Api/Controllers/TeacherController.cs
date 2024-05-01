@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using TeacherRate.Api.DTOs;
+using TeacherRate.Api.Models;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 
@@ -26,19 +28,31 @@ public class TeacherController : ControllerBase
     }
 
     [HttpGet("tasks")]
-    public async Task<ActionResult<IEnumerable<UserTaskDTO>>> GetTasks()
+    public async Task<ActionResult<PageModel<UserTaskDTO>>> GetTasks(
+        [FromQuery] PageRequest pageRequest)
     {
         var tasks = await _teacherService.GetTasks(0, 10);
 
-        return Ok(_mapper.Map<List<UserTaskDTO>>(tasks));
+        var page = new PageModel<UserTaskDTO>(pageRequest)
+        {
+            Items = _mapper.Map<List<UserTaskDTO>>(tasks),
+        };
+
+        return Ok(page);
     }
 
     [HttpGet("completedTasks")]
-    public async Task<ActionResult<IEnumerable<CompletedTaskDTO>>> GetCompletedTasks()
+    public async Task<ActionResult<PageModel<CompletedTaskDTO>>> GetCompletedTasks(
+        [FromQuery] PageRequest pageRequest)
     {
         var tasks = await _teacherService.GetCompletedTasks(0, 10);
 
-        return Ok(_mapper.Map<List<CompletedTaskDTO>>(tasks));
+        var page = new PageModel<CompletedTaskDTO>(pageRequest)
+        {
+            Items = _mapper.Map<List<CompletedTaskDTO>>(tasks)
+        };
+
+        return Ok(page);
     }
 
     [HttpGet("tasks/{id}")]

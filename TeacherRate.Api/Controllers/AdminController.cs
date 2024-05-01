@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TeacherRate.Api.DTOs;
+using TeacherRate.Api.Models;
 using TeacherRate.Domain.Interfaces;
 
 namespace TeacherRate.Api.Controllers;
@@ -19,10 +20,16 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("tasks")]
-    public async Task<ActionResult<IEnumerable<UserTaskDTO>>> GetTasks()
+    public async Task<ActionResult<PageModel<UserTaskDTO>>> GetTasks(
+        [FromQuery] PageRequest pageRequest)
     {
         var tasks = await _adminService.GetTasks(0, 10);
 
-        return Ok(_mapper.Map<List<UserTaskDTO>>(tasks));
+        var page = new PageModel<UserTaskDTO>(pageRequest)
+        {
+            Items = _mapper.Map<List<UserTaskDTO>>(tasks)
+        };
+
+        return Ok(page);
     } 
 }
