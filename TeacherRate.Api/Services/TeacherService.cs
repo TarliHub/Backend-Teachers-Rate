@@ -1,4 +1,5 @@
-﻿using TeacherRate.Domain.Interfaces;
+﻿using TeacherRate.Api.Services.Base;
+using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 using TeacherRate.Storage.Abstraction.Interfaces;
 

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using TeacherRate.Api.DTOs;
+using TeacherRate.Domain.Interfaces;
 
 namespace TeacherRate.Api.Controllers;
 
@@ -7,8 +9,20 @@ namespace TeacherRate.Api.Controllers;
 [ApiController]
 public class AdminController : ControllerBase
 {
-    public AdminController()
+    private readonly IAdminService _adminService;
+    private readonly IMapper _mapper;
+
+    public AdminController(IAdminService adminService, IMapper mapper)
     {
-        
+        _adminService = adminService;
+        _mapper = mapper;
     }
+
+    [HttpGet("tasks")]
+    public async Task<ActionResult<IEnumerable<UserTaskDTO>>> GetTasks()
+    {
+        var tasks = await _adminService.GetTasks(0, 10);
+
+        return Ok(_mapper.Map<List<UserTaskDTO>>(tasks));
+    } 
 }

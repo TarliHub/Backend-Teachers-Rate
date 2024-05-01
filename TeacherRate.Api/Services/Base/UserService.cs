@@ -1,8 +1,8 @@
-﻿using TeacherRate.Domain.Interfaces;
+﻿using TeacherRate.Domain.Interfaces.Base;
 using TeacherRate.Domain.Models;
 using TeacherRate.Storage.Abstraction.Interfaces;
 
-namespace TeacherRate.Api.Services;
+namespace TeacherRate.Api.Services.Base;
 
 public class UserService : IUserService
 {

@@ -1,6 +1,6 @@
 ﻿using TeacherRate.Domain.Models;
 
-namespace TeacherRate.Domain.Interfaces;
+namespace TeacherRate.Domain.Interfaces.Base;
 
 public interface IUserService
 {

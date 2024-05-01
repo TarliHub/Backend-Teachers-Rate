@@ -1,4 +1,5 @@
-﻿using TeacherRate.Domain.Models;
+﻿using TeacherRate.Domain.Interfaces.Base;
+using TeacherRate.Domain.Models;
 
 namespace TeacherRate.Domain.Interfaces;
 

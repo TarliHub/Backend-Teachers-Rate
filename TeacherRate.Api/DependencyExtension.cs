@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using TeacherRate.Api.MapperProfiles;
 using TeacherRate.Api.Services;
+using TeacherRate.Api.Services.Base;
 using TeacherRate.Domain.Interfaces;
+using TeacherRate.Domain.Interfaces.Base;
 using TeacherRate.Storage.Abstraction.Interfaces;
 using TeacherRate.Storage.Repository;
 
