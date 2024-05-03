@@ -7,5 +7,5 @@ public class HeadTeacher : TeacherBase
         Role = Role.HeadTeacher;
     }
 
-    public virtual ICollection<Teacher> Teacher { get; set; } = null!;
+    public virtual ICollection<Teacher> Teachers { get; set; } = null!;
 }

@@ -14,20 +14,22 @@ public class GenericRepository : IRepository
         _context = context;
     }
 
-    public async Task<T> Add<T>(T user) where T : class
+    public T Add<T>(T user) where T : class
     {
-        var entity = await _context.Set<T>().AddAsync(user);
+        var entity = _context.Set<T>().Add(user);
         return entity.Entity;
     }
 
-    public async Task<IQueryable<T>> GetAll<T>() where T : class
+    public IQueryable<T> GetAll<T>() where T : class
     {
         return _context.Set<T>().AsQueryable();
     }
 
-    public async Task<IQueryable<T>> GetAll<T>(int index, int size) where T : class
+    public IQueryable<T> GetAll<T>(int index, int size) where T : class
     {
-        return _context.Set<T>().Skip(index).Take(size).AsQueryable();
+        return _context.Set<T>().Skip(index)
+            .Take(size)
+            .AsQueryable();
     }
 
     public async Task<T?> GetById<T>(int id) where T : class
@@ -40,9 +42,9 @@ public class GenericRepository : IRepository
         return _context.Set<T>().SingleOrDefaultAsync(expression);
     }
 
-    public async Task<bool> Remove<T>(int id) where T : class
+    public bool Remove<T>(int id) where T : class
     {
-        var entity = await _context.Set<T>().FindAsync(id);
+        var entity = _context.Set<T>().Find(id);
         if (entity is null) return false;
 
         _context.Set<T>().Remove(entity);
@@ -55,7 +57,7 @@ public class GenericRepository : IRepository
     }
 
     // Not sure if it works correctly
-    public async Task<T> Update<T>(int id, T user) where T : class
+    public T Update<T>(int id, T user) where T : class
     {
         var entity = _context.Set<T>().Update(user);
         return entity.Entity;

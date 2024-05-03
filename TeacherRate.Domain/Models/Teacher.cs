@@ -1,4 +1,6 @@
-﻿namespace TeacherRate.Domain.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TeacherRate.Domain.Models;
 
 public class Teacher : TeacherBase
 {

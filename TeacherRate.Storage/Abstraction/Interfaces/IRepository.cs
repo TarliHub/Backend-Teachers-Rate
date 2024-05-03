@@ -5,11 +5,11 @@ namespace TeacherRate.Storage.Abstraction.Interfaces;
 public interface IRepository
 {
     Task<T?> GetById<T>(int id) where T : class;
-    Task<IQueryable<T>> GetAll<T>() where T : class;
-    Task<IQueryable<T>> GetAll<T>(int index, int size) where T : class;
-    Task<T> Add<T>(T user) where T : class;
-    Task<bool> Remove<T>(int id) where T : class;
-    Task<T> Update<T>(int id, T user) where T : class;
+    IQueryable<T> GetAll<T>() where T : class;
+    IQueryable<T> GetAll<T>(int index, int size) where T : class;
+    T Add<T>(T user) where T : class;
+    bool Remove<T>(int id) where T : class;
+    T Update<T>(int id, T user) where T : class;
     Task<T?> QueryOne<T>(Expression<Func<T, bool>> expression) where T : class; 
     Task<int> SaveChanges();
 }

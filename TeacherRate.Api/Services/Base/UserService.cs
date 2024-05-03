@@ -1,4 +1,5 @@
-﻿using TeacherRate.Domain.Interfaces.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using TeacherRate.Domain.Interfaces.Base;
 using TeacherRate.Domain.Models;
 using TeacherRate.Storage.Abstraction.Interfaces;
 
@@ -13,9 +14,14 @@ public class UserService : IUserService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<TaskCategory>> GetCategories()
+    public Task<List<TaskCategory>> GetCategories()
     {
-        return await _repository.GetAll<TaskCategory>();
+        return _repository.GetAll<TaskCategory>().ToListAsync();
+    }
+
+    public Task<TaskCategory?> GetCategoryById(int id)
+    {
+        return _repository.GetById<TaskCategory>(id);
     }
 
     public Task<UserTask?> GetTaskById(int id)
@@ -23,9 +29,9 @@ public class UserService : IUserService
         return _repository.GetById<UserTask>(id);
     }
 
-    public async Task<IEnumerable<UserTask>> GetTasks(int index, int size)
+    public Task<List<UserTask>> GetTasks(int index, int size)
     {
-        return await _repository.GetAll<UserTask>(index, size);
+        return _repository.GetAll<UserTask>(index, size).ToListAsync();
     }
 
     public async Task<User?> GetUserById(int id)
@@ -35,6 +41,6 @@ public class UserService : IUserService
 
     public async Task<User> UpdateUser(int id, User user)
     {
-        return await _repository.Update(id, user);
+        throw new NotImplementedException();
     }
 }

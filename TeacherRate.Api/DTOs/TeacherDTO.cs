@@ -2,7 +2,7 @@
 
 namespace TeacherRate.Api.DTOs;
 
-public class TeacherDTO : UserDTO
+public class TeacherDTO : TeacherBaseDTO
 {
     public HeadTeacherDTO HeadTeacher { get; set; } = null!;
 }

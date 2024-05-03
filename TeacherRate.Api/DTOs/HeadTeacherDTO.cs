@@ -2,13 +2,6 @@
 
 namespace TeacherRate.Api.DTOs;
 
-public class HeadTeacherDTO : UserDTO
+public class HeadTeacherDTO : TeacherBaseDTO
 {
-    public HeadTeacherDTO()
-    {
-        Teachers = new();
-    }
-
-    [JsonIgnore]
-    public List<TeacherDTO> Teachers { get; set; }
 }

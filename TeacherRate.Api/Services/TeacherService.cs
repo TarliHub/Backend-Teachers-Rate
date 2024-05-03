@@ -1,4 +1,5 @@
-﻿using TeacherRate.Api.Services.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using TeacherRate.Api.Services.Base;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 using TeacherRate.Storage.Abstraction.Interfaces;
@@ -14,13 +15,13 @@ public class TeacherService : UserService, ITeacherService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<CompletedTask>> GetCompletedTasks(int index, int size)
+    public Task<List<CompletedTask>> GetCompletedTasks(int index, int size)
     {
-        return await _repository.GetAll<CompletedTask>(index, size);
+        return _repository.GetAll<CompletedTask>(index, size).ToListAsync();
     }
 
     public async Task<bool> SendTask(TeacherRequest request)
     {
-        return await _repository.Add(request) != null;
+        throw new NotImplementedException();
     }
 }

@@ -13,7 +13,8 @@ public class TeacherRateProfile : Profile
             .ForMember(dest => dest.Points, act => act.MapFrom(src => src.Points))
             .ReverseMap();
         CreateMap<TaskCategory, TaskCategoryDTO>().ReverseMap();
-        CreateMap<UserTask, UserTaskDTO>().ReverseMap();
+        CreateMap<UserTask, UserTaskDTO>()
+            .ReverseMap();
         CreateMap<CompletedTask, CompletedTaskDTO>()
             .ForMember(dest => dest.TeacherId, act => act.MapFrom(src => src.Teacher.Id))
             .ReverseMap();

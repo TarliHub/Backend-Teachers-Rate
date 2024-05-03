@@ -1,7 +1,9 @@
-﻿using TeacherRate.Api.Services.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using TeacherRate.Api.Services.Base;
 using TeacherRate.Domain.Exceptions;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
+using TeacherRate.Helpers;
 using TeacherRate.Storage.Abstraction.Interfaces;
 
 namespace TeacherRate.Api.Services;
@@ -15,19 +17,31 @@ public class AdminService : UserService, IAdminService
         _repository = repository;
     }
 
-    public Task<TaskCategory> AddCategory(TaskCategory category)
+    public async Task<TaskCategory> AddCategory(TaskCategory category)
     {
-        return _repository.Add(category);
+        var entity = _repository.Add(category);
+        await _repository.SaveChanges();
+        return entity;
     }
 
-    public Task<HeadTeacher> AddHeadTeacher(HeadTeacher headTeacher)
+    public async Task<HeadTeacher> AddHeadTeacher(HeadTeacher headTeacher, string password)
     {
-        return _repository.Add(headTeacher);
+        var entity = _repository.Add(headTeacher);
+        var creds = new CredentialsInfo()
+        {
+            PasswordHash = PasswordManager.ComputeHashPassword(password),
+            UserId = entity.Id,
+        };
+        _repository.Add(creds);
+        await _repository.SaveChanges();
+        return entity;
     }
 
-    public Task<UserTask> AddTask(UserTask task)
+    public async Task<UserTask> AddTask(UserTask task)
     {
-        return _repository.Add(task);
+        var entity = _repository.Add(task);
+        await _repository.SaveChanges();
+        return entity;
     }
 
     public Task<HeadTeacher?> GetHeadTeacherById(int id)
@@ -35,48 +49,48 @@ public class AdminService : UserService, IAdminService
         return _repository.GetById<HeadTeacher>(id);
     }
 
-    public async Task<IEnumerable<HeadTeacher>> GetHeadTeachers()
+    public Task<List<HeadTeacher>> GetHeadTeachers(int index, int size)
     {
-        return await _repository.GetAll<HeadTeacher>();
+        return _repository.GetAll<HeadTeacher>(index, size).ToListAsync();
     }
 
-    public async Task<IEnumerable<CompletedTask>> GetHeadTeacherTasks(int id, int index, int size)
+    public async Task<List<CompletedTask>> GetHeadTeacherTasks(int id, int index, int size)
     {
         var headTeacher = await _repository.GetById<HeadTeacher>(id);
 
         if (headTeacher is null)
             throw new DetailedException("not found", nameof(headTeacher));
 
-        return headTeacher.Tasks.Skip(index).Take(size);
+        return headTeacher.Tasks.Skip(index).Take(size).ToList();
     }
 
     public Task<bool> RemoveCategory(int id)
     {
-        return _repository.Remove<TaskCategory>(id);
+        throw new NotImplementedException();
     }
 
     public Task<bool> RemoveHeadTeacher(int id)
     {
-        return _repository.Remove<HeadTeacher>(id);
+        throw new NotImplementedException();
     }
 
     public Task<bool> RemoveTask(int id)
     {
-        return _repository.Remove<UserTask>(id);
+        throw new NotImplementedException();
     }
 
     public Task<TaskCategory> UpdateCategory(int id, TaskCategory category)
     {
-        return _repository.Update(id, category);
+        throw new NotImplementedException();
     }
 
     public Task<HeadTeacher> UpdateHeadTeacher(int id, HeadTeacher headTeacher)
     {
-        return _repository.Update(id, headTeacher);
+        throw new NotImplementedException();
     }
 
     public Task<UserTask> UpdateTask(int id, UserTask task)
     {
-        return _repository.Update(id, task);
+        throw new NotImplementedException();
     }
 }
