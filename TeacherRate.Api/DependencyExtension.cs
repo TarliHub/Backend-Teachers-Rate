@@ -33,9 +33,10 @@ public static class DependencyExtension
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddTransient<IRepository, FakeRepository>();
+        services.AddTransient<IRepository, GenericRepository>();
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<ITeacherService, TeacherService>();
+        services.AddTransient<IAdminService, AdminService>();
 
         return services;
     }

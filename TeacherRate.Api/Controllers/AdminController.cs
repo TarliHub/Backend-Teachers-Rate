@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TeacherRate.Api.DTOs;
 using TeacherRate.Api.Models;
+using TeacherRate.Api.Models.Requests;
 using TeacherRate.Domain.Interfaces;
 
 namespace TeacherRate.Api.Controllers;
@@ -31,5 +32,5 @@ public class AdminController : ControllerBase
         };
 
         return Ok(page);
-    } 
+    }
 }

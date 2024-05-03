@@ -1,4 +1,6 @@
-﻿namespace TeacherRate.Api.Models;
+﻿using TeacherRate.Api.Models.Requests;
+
+namespace TeacherRate.Api.Models;
 
 public class PageModel<T>
 {

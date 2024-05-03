@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using TeacherRate.Api.DTOs;
 using TeacherRate.Api.Models;
+using TeacherRate.Api.Models.Requests;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 

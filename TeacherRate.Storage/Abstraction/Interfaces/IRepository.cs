@@ -1,4 +1,6 @@
-﻿namespace TeacherRate.Storage.Abstraction.Interfaces;
+﻿using System.Linq.Expressions;
+
+namespace TeacherRate.Storage.Abstraction.Interfaces;
 
 public interface IRepository
 {
@@ -7,5 +9,7 @@ public interface IRepository
     Task<IQueryable<T>> GetAll<T>(int index, int size) where T : class;
     Task<T> Add<T>(T user) where T : class;
     Task<bool> Remove<T>(int id) where T : class;
-    Task<T> Update <T>(int id, T user) where T : class;
+    Task<T> Update<T>(int id, T user) where T : class;
+    Task<T?> QueryOne<T>(Expression<Func<T, bool>> expression) where T : class; 
+    Task<int> SaveChanges();
 }

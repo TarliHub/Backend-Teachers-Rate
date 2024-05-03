@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TeacherRate.Storage;
+
 namespace TeacherRate.Api;
 
 public class Program
@@ -8,6 +11,8 @@ public class Program
 
         builder.Services.AddControllers();
         builder.Services.AddDependencies();
+        builder.Services.AddDbContext<TeacherRateContext>(
+            options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
