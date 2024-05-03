@@ -1,4 +1,5 @@
 ﻿using TeacherRate.Api.Services.Base;
+using TeacherRate.Domain.Exceptions;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 using TeacherRate.Storage.Abstraction.Interfaces;
@@ -37,6 +38,16 @@ public class AdminService : UserService, IAdminService
     public async Task<IEnumerable<HeadTeacher>> GetHeadTeachers()
     {
         return await _repository.GetAll<HeadTeacher>();
+    }
+
+    public async Task<IEnumerable<CompletedTask>> GetHeadTeacherTasks(int id, int index, int size)
+    {
+        var headTeacher = await _repository.GetById<HeadTeacher>(id);
+
+        if (headTeacher is null)
+            throw new DetailedException("not found", nameof(headTeacher));
+
+        return headTeacher.Tasks.Skip(index).Take(size);
     }
 
     public Task<bool> RemoveCategory(int id)
