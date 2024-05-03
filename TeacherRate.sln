@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherRate.Storage", "Teac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherRate.Tests", "TeacherRate.Tests\TeacherRate.Tests.csproj", "{8F608D3E-5FB8-46D4-89E2-FD13086C1F53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeacherRate.Helpers", "TeacherRate.Helpers\TeacherRate.Helpers.csproj", "{1DED33D0-45CC-4CEE-996F-31C3A8EA6BA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeacherRate.Helpers", "TeacherRate.Helpers\TeacherRate.Helpers.csproj", "{1DED33D0-45CC-4CEE-996F-31C3A8EA6BA8}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{EB8E6522-FF41-4D74-842F-3C055E41BC1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{1DED33D0-45CC-4CEE-996F-31C3A8EA6BA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DED33D0-45CC-4CEE-996F-31C3A8EA6BA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DED33D0-45CC-4CEE-996F-31C3A8EA6BA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB8E6522-FF41-4D74-842F-3C055E41BC1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB8E6522-FF41-4D74-842F-3C055E41BC1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB8E6522-FF41-4D74-842F-3C055E41BC1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB8E6522-FF41-4D74-842F-3C055E41BC1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

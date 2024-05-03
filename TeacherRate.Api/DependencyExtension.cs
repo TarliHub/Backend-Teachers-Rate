@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using TeacherRate.Api.MapperProfiles;
 using TeacherRate.Api.Services;
 using TeacherRate.Api.Services.Base;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Interfaces.Base;
+using TeacherRate.Storage;
 using TeacherRate.Storage.Abstraction.Interfaces;
 using TeacherRate.Storage.Repository;
 
@@ -18,6 +20,15 @@ public static class DependencyExtension
             .AddServices();
     }
 
+    public static void ApplyMigrations(this IApplicationBuilder app)
+    {
+        using IServiceScope scope = app.ApplicationServices.CreateScope();
+
+        using TeacherRateContext dbContext =
+            scope.ServiceProvider.GetRequiredService<TeacherRateContext>();
+
+        dbContext.Database.Migrate();
+    }
     private static IServiceCollection AddMapperProfile(this IServiceCollection services)
     {
         var mapperConfig = new MapperConfiguration(mc =>
