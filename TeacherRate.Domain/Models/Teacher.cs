@@ -2,5 +2,10 @@
 
 public class Teacher : TeacherBase
 {
+    public Teacher()
+    {
+        Role = Role.Teacher;
+    }
+
     public virtual HeadTeacher HeadTeacher { get; set; } = null!;
 }

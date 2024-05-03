@@ -1,4 +1,4 @@
-﻿namespace TeacherRate.Api.Models;
+﻿namespace TeacherRate.Api.Models.Requests;
 
 public class PageRequest
 {
