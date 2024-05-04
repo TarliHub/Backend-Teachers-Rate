@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TeacherRate.Api.DTOs;
 using TeacherRate.Api.Models.Requests;
 using TeacherRate.Domain.Models;
@@ -48,5 +49,31 @@ public class LoginController : ControllerBase
             return BadRequest();
 
         return Ok(_mapper.Map<UserDTO>(user));
+    }
+
+    [HttpPost("createAdmin")]
+    public async Task<ActionResult<UserDTO>> CreateAdmin(CreateUserRequest request)
+    {
+        var userFromDb = await _repository.QueryOne<User>(u => u.Role == Role.Admin);
+        if (userFromDb != null)
+            return BadRequest("Admin aready exists");
+
+        var user = new User()
+        {
+            Name = request.Name,
+            LastName = request.LastName,
+            MiddleName = request.MiddleName,
+            Email = request.Email,
+            CreatedAt = DateTime.UtcNow,
+        };
+
+        var entity = _repository.Add(user);
+        var credentials = new CredentialsInfo()
+        {
+            UserId = entity.Id,
+            PasswordHash = PasswordManager.ComputeHashPassword(request.Password)
+        };
+        await _repository.SaveChanges();
+        return Created("", _mapper.Map<UserDTO>(user));
     }
 }
