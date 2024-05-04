@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 using TeacherRate.Api.Services;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 using TeacherRate.Storage;
+using TeacherRate.Storage.Abstraction.Interfaces;
 using TeacherRate.Storage.Repository;
+using TeacherRate.Tests.Fakes;
 
 namespace TeacherRate.Tests;
 
