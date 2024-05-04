@@ -2,9 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TeacherRate.Api.MapperProfiles;
 using TeacherRate.Api.Services;
-using TeacherRate.Api.Services.Base;
 using TeacherRate.Domain.Interfaces;
-using TeacherRate.Domain.Interfaces.Base;
 using TeacherRate.Storage;
 using TeacherRate.Storage.Abstraction.Interfaces;
 using TeacherRate.Storage.Repository;
@@ -46,8 +44,7 @@ public static class DependencyExtension
     {
         services.AddTransient<IRepository, GenericRepository>();
         services.AddTransient<IUserService, UserService>();
-        services.AddTransient<ITeacherService, TeacherService>();
-        services.AddTransient<IAdminService, AdminService>();
+        services.AddTransient<ITaskService, TaskService>();
 
         return services;
     }

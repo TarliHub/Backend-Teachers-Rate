@@ -56,10 +56,9 @@ public class GenericRepository : IRepository
         return await _context.SaveChangesAsync();
     }
 
-    // Not sure if it works correctly
-    public T Update<T>(int id, T user) where T : class
+    public T Update<T>(T item) where T : class
     {
-        var entity = _context.Set<T>().Update(user);
+        var entity = _context.Set<T>().Update(item);
         return entity.Entity;
     }
 }

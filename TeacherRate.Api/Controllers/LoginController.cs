@@ -21,6 +21,17 @@ public class LoginController : ControllerBase
         _mapper = mapper;
     }
 
+    [HttpGet("me")]
+    public async Task<ActionResult<UserDTO>> GetUserInfo()
+    {
+        var id = HttpContext.Session.GetInt32("UserId");
+        if (!id.HasValue)
+            id = 1;
+        //return Unauthorized();
+
+        var user = await _repository.GetById<User>(id.Value);
+        return Ok(_mapper.Map<UserDTO>(user));
+    }
 
     //admin: admin@admin.com pass: admin
 

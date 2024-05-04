@@ -1,77 +1,86 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using TeacherRate.Api.DTOs;
-using TeacherRate.Api.Models;
 using TeacherRate.Api.Models.Requests;
+using TeacherRate.Api.Models;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 
 namespace TeacherRate.Api.Controllers;
 
-[Route("api/teacher")]
+[Route("api/teachers")]
 [ApiController]
 public class TeacherController : ControllerBase
 {
-    private readonly ITeacherService _teacherService;
+    private readonly IUserService _userService;
     private readonly IMapper _mapper;
 
-    public TeacherController(ITeacherService taskService, IMapper mapper)
+    public TeacherController(IUserService userService, IMapper mapper)
     {
-        _teacherService = taskService;
+        _userService = userService;
         _mapper = mapper;
     }
 
+    [HttpGet()]
+    public async Task<ActionResult<PageModel<TeacherDTO>>> GetTeachers(
+        [FromQuery] PageRequest pageRequest)
+    {
+        var id = HttpContext.Session.GetInt32("UserId");
+        if (!id.HasValue)
+            id = 2;
+        //return Unauthorized();
+
+        var users = await _userService.GetTeachers(id!.Value, pageRequest.Page, pageRequest.Size);
+
+        var page = new PageModel<TeacherDTO>(pageRequest)
+        {
+            Items = _mapper.Map<List<TeacherDTO>>(users)
+        };
+
+        return Ok(page);
+    }
+
     [HttpGet("{id}")]
-    public async Task<ActionResult<UserDTO>> GetTeacher(int id)
+    public async Task<ActionResult<TeacherDTO>> GetTeacherById(int id)
     {
-        return Ok(await _teacherService.GetUserById(id));
+        var user = await _userService.GetUserById<Teacher>(id);
+
+        if (user is null)
+            return NotFound("Teacher not found");
+
+        return Ok(_mapper.Map<TeacherDTO>(user));
     }
 
-    [HttpGet("tasks")]
-    public async Task<ActionResult<PageModel<UserTaskDTO>>> GetTasks(
-        [FromQuery] PageRequest pageRequest)
+    [HttpPost]
+    public async Task<ActionResult<TeacherDTO>> AddTeacher(CreateUserRequest request)
     {
-        var tasks = await _teacherService.GetTasks(0, 10);
-
-        var page = new PageModel<UserTaskDTO>(pageRequest)
+        var user = new Teacher()
         {
-            Items = _mapper.Map<List<UserTaskDTO>>(tasks),
+            Name = request.Name,
+            LastName = request.LastName,
+            MiddleName = request.MiddleName,
+            Email = request.Email,
+            CreatedAt = DateTime.UtcNow,
         };
 
-        return Ok(page);
+        var userFromDb = await _userService.AddUser(user, request.Password);
+
+        return Created(string.Empty, _mapper.Map<TeacherDTO>(userFromDb));
     }
 
-    [HttpGet("completedTasks")]
-    public async Task<ActionResult<PageModel<CompletedTaskDTO>>> GetCompletedTasks(
-        [FromQuery] PageRequest pageRequest)
+    [HttpPut]
+    public async Task<ActionResult<TeacherDTO>> UpdateTeacher(TeacherDTO user)
     {
-        var tasks = await _teacherService.GetCompletedTasks(0, 10);
+        var userFromDb = await _userService.UpdateUser(_mapper.Map<Teacher>(user));
 
-        var page = new PageModel<CompletedTaskDTO>(pageRequest)
-        {
-            Items = _mapper.Map<List<CompletedTaskDTO>>(tasks)
-        };
-
-        return Ok(page);
+        return Ok(_mapper.Map<TeacherDTO>(userFromDb));
     }
 
-    [HttpGet("tasks/{id}")]
-    public async Task<ActionResult<UserTaskDTO>> GetTask(int id)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteUser(int id)
     {
-        var task = await _teacherService.GetTaskById(id);
+        await _userService.RemoveUser(id);
 
-        return Ok(_mapper.Map<UserTaskDTO>(task));
-    }
-
-    [HttpPost("tasks")]
-    public async Task<ActionResult> SendTask(TeacherRequestDTO request)
-    {
-        var isRequestSend = await _teacherService.SendTask(_mapper.Map<TeacherRequest>(request));
-
-        if (!isRequestSend) 
-            return BadRequest();
-
-        return Ok();
+        return NoContent();
     }
 }

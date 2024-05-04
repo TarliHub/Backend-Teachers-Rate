@@ -11,6 +11,14 @@ public class Program
 
         builder.Services.AddControllers();
         builder.Services.AddDependencies();
+        builder.Services.AddDistributedMemoryCache();
+
+        builder.Services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(10);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+        });
 
         builder.Services.AddCors(options =>
         {
@@ -47,6 +55,8 @@ public class Program
         app.UseCors();
 
         app.UseAuthorization();
+
+        app.UseSession();
 
         app.MapControllers();
 
