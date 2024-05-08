@@ -16,7 +16,9 @@ public class PageModel<T>
         Size = pageRequest.Size;
     }
 
-    public IEnumerable<T> Items { get; set; } = null!;
+    public List<T> Items { get; set; } = null!;
     public int Page { get; set; }
     public int Size { get; set; }
+
+    public int Count => (int)Math.Ceiling((decimal)(Items.Count / Size));
 }
