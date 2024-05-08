@@ -30,3 +30,4 @@ services:
       - DB_NAME=TeachersRate
       - DB_USER=user
       - DB_PASSWORD=password12345
+      - APP_SETTINGS=Development 

@@ -45,6 +45,7 @@ public static class DependencyExtension
         services.AddTransient<IRepository, GenericRepository>();
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<ITaskService, TaskService>();
+        services.AddTransient<IAuthService, AuthService>();
 
         return services;
     }

@@ -20,9 +20,10 @@ public class UserService : IUserService
     {
         var entity = _repository.Add(user);
         var credentials = new CredentialsInfo() {
-            UserId = entity.Id,
+            User = entity,
             PasswordHash = PasswordManager.ComputeHashPassword(password)
         };
+        _repository.Add(credentials);
         await _repository.SaveChanges();
         return entity;
     }

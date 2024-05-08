@@ -5,10 +5,12 @@ using TeacherRate.Api.Models.Requests;
 using TeacherRate.Api.Models;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TeacherRate.Api.Controllers;
 
 [Route("api/teachers")]
+[Authorize(Roles = "HeadTeacher")]
 [ApiController]
 public class TeacherController : ControllerBase
 {
