@@ -14,20 +14,6 @@ namespace TeacherRate.Storage.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "CredentialsInfo",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    PasswordHash = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CredentialsInfo", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TaskCategory",
                 columns: table => new
                 {
@@ -85,6 +71,26 @@ namespace TeacherRate.Storage.Migrations
                         name: "FK_UserTask_TaskCategory_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "TaskCategory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CredentialsInfo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CredentialsInfo", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CredentialsInfo_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -161,6 +167,11 @@ namespace TeacherRate.Storage.Migrations
                 name: "IX_CompletedTask_TeacherId",
                 table: "CompletedTask",
                 column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CredentialsInfo_UserId",
+                table: "CredentialsInfo",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TeacherRequest_ReviewerId",

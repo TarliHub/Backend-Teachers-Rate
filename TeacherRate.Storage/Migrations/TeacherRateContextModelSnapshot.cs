@@ -72,6 +72,8 @@ namespace TeacherRate.Storage.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("CredentialsInfo");
                 });
 
@@ -255,6 +257,17 @@ namespace TeacherRate.Storage.Migrations
                     b.Navigation("Teacher");
                 });
 
+            modelBuilder.Entity("TeacherRate.Domain.Models.CredentialsInfo", b =>
+                {
+                    b.HasOne("TeacherRate.Domain.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TeacherRate.Domain.Models.TeacherRequest", b =>
                 {
                     b.HasOne("TeacherRate.Domain.Models.User", "Reviewer")
@@ -296,7 +309,7 @@ namespace TeacherRate.Storage.Migrations
             modelBuilder.Entity("TeacherRate.Domain.Models.Teacher", b =>
                 {
                     b.HasOne("TeacherRate.Domain.Models.HeadTeacher", "HeadTeacher")
-                        .WithMany("Teacher")
+                        .WithMany("Teachers")
                         .HasForeignKey("HeadTeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -311,7 +324,7 @@ namespace TeacherRate.Storage.Migrations
 
             modelBuilder.Entity("TeacherRate.Domain.Models.HeadTeacher", b =>
                 {
-                    b.Navigation("Teacher");
+                    b.Navigation("Teachers");
                 });
 #pragma warning restore 612, 618
         }

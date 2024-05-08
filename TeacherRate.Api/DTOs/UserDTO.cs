@@ -1,4 +1,6 @@
-﻿namespace TeacherRate.Api.DTOs;
+﻿using TeacherRate.Domain.Models;
+
+namespace TeacherRate.Api.DTOs;
 
 public class UserDTO
 {
@@ -8,4 +10,5 @@ public class UserDTO
     public required string MiddleName { get; set; }
     public required string Email { get; set; }
     public DateTime CreatedAt { get; set; }
+    public Role Role { get; set; }
 }

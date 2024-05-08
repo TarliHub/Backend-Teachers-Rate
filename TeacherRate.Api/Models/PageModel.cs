@@ -20,5 +20,5 @@ public class PageModel<T>
     public int Page { get; set; }
     public int Size { get; set; }
 
-    public int Count => (int)Math.Ceiling((decimal)(Items.Count / Size));
+    public int Count => (int)Math.Ceiling((decimal)Items.Count / Size);
 }

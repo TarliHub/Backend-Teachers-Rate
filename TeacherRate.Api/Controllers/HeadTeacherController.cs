@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeacherRate.Api.DTOs;
 using TeacherRate.Api.Models;
@@ -9,6 +10,7 @@ using TeacherRate.Domain.Models;
 namespace TeacherRate.Api.Controllers;
 
 [Route("api/head-teachers")]
+[Authorize(Roles = "Admin")]
 [ApiController]
 public class HeadTeacherController : ControllerBase
 {
@@ -63,7 +65,7 @@ public class HeadTeacherController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<HeadTeacherDTO>> UpdateUser(HeadTeacherDTO user)
+    public async Task<ActionResult<HeadTeacherDTO>> UpdateHeadTeacher(HeadTeacherDTO user)
     {
         var userFromDb = await _userService.UpdateUser(_mapper.Map<HeadTeacher>(user));
 
@@ -71,7 +73,7 @@ public class HeadTeacherController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteUser(int id)
+    public async Task<ActionResult> DeleteHeadTeacher(int id)
     {
         await _userService.RemoveUser(id);
 
