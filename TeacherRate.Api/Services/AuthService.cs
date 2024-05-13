@@ -34,12 +34,12 @@ public class AuthService : IAuthService
     public async Task<AuthData> Login(string email, string password)
     {
         string passwordHash = PasswordManager.ComputeHashPassword(password);
-        var credentials = await _repository.QueryOne<CredentialsInfo>(creds => creds.PasswordHash == passwordHash);
-        var user = credentials?.User;
+        var user = await _repository.QueryOne<User>(t => t.Email == email);
         if (user is null)
             throw new DetailedException($"User with email {email} not found", nameof(email));
 
-        if (credentials is null || user.Id != credentials.User.Id)
+        var credentials = await _repository.QueryOne<CredentialsInfo>(creds => creds.User.Id == user.Id);
+        if (credentials is null || passwordHash != credentials.PasswordHash)
             throw new DetailedException($"Password did not match the user's password", nameof(password));
 
         var token = GenerateToken(user);

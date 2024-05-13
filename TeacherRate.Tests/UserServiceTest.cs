@@ -23,7 +23,7 @@ public class UserServiceTest
     [Fact]
     public async Task HeadTeachers_AddEntity_CorrectValues()
     {
-        var userService = GetUserService();
+        var userService = ServiceGenerator.GetUserService("UserServiceTestDB");
 
         foreach (var obj in Users)
         {
@@ -40,17 +40,5 @@ public class UserServiceTest
         var users = await userService.GetHeadTeachers().ToListAsync();
 
         Assert.Equal(Users.Count, users.Count);
-    }
-
-    private IUserService GetUserService()
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<TeacherRateContext>();
-        optionsBuilder.UseLazyLoadingProxies()
-            .UseInMemoryDatabase("InMemoryDb");
-
-        var context = new TeacherRateContext(optionsBuilder.Options);
-        var repository = new GenericRepository(context);
-        var userService = new UserService(repository);
-        return userService;
     }
 }

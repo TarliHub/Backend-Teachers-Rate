@@ -18,6 +18,11 @@ public class UserService : IUserService
 
     public async Task<User> AddUser(User user, string password)
     {
+        var existedUser = await _repository.GetAll<User>().SingleOrDefaultAsync(t => t.Email == user.Email);
+
+        if (existedUser != null)
+            throw new ArgumentException($"User with email {existedUser.Email} already exists", nameof(existedUser));
+
         var entity = _repository.Add(user);
         var credentials = new CredentialsInfo() {
             User = entity,
