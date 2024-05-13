@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeacherRate.Api.DTOs;
-using TeacherRate.Api.Models;
+using TeacherRate.Api.Models.Paging;
 using TeacherRate.Api.Models.Requests;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
@@ -24,17 +24,14 @@ public class HeadTeacherController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<ActionResult<PageModel<HeadTeacherDTO>>> GetHeadTeachers(
+    public async Task<ActionResult<PagedList<HeadTeacherDTO>>> GetHeadTeachers(
         [FromQuery] PageRequest pageRequest)
     {
-        var users = await _userService.GetHeadTeachers(pageRequest.Page, pageRequest.Size);
+        var users = _userService.GetHeadTeachers();
 
-        var page = new PageModel<HeadTeacherDTO>(pageRequest)
-        {
-            Items = _mapper.Map<List<HeadTeacherDTO>>(users)
-        };
+        var page = users.ToPagedList(pageRequest.Page, pageRequest.Size);
 
-        return Ok(page);
+        return Ok(page.Map<HeadTeacherDTO>(_mapper));
     }
 
     [HttpGet("{id}")]

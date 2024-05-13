@@ -28,20 +28,6 @@ public class UserService : IUserService
         return entity;
     }
 
-    public async Task<List<Teacher>> GetTeachers(int headTeacherId, int index, int size)
-    {
-        var headTeacher = await _repository.GetById<HeadTeacher>(headTeacherId);
-        if(headTeacher is null)
-            throw new DetailedException("not found", nameof(headTeacher));
-
-        return headTeacher.Teachers.ToList();
-    }
-
-    public Task<List<HeadTeacher>> GetHeadTeachers(int index, int size)
-    {
-        return _repository.GetAll<HeadTeacher>(index, size).ToListAsync();
-    }
-
     public Task<T?> GetUserById<T>(int id) where T : User
     {
         return _repository.GetById<T>(id);
@@ -58,5 +44,15 @@ public class UserService : IUserService
         var entity = _repository.Update(user);
         await _repository.SaveChanges();
         return entity;
+    }
+
+    public IQueryable<HeadTeacher> GetHeadTeachers()
+    {
+        return _repository.GetAll<HeadTeacher>();
+    }
+
+    public IQueryable<Teacher> GetTeachers(int headTeacherId)
+    {
+        return _repository.GetAll<Teacher>().Where(t => t.HeadTeacher.Id == headTeacherId);
     }
 }

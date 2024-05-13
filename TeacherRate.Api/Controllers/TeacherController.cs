@@ -6,6 +6,7 @@ using TeacherRate.Api.Models;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using TeacherRate.Api.Models.Paging;
 
 namespace TeacherRate.Api.Controllers;
 
@@ -24,7 +25,7 @@ public class TeacherController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<ActionResult<PageModel<TeacherDTO>>> GetTeachers(
+    public async Task<ActionResult<PagedList<TeacherDTO>>> GetTeachers(
         [FromQuery] PageRequest pageRequest)
     {
         var id = HttpContext.Session.GetInt32("UserId");
@@ -32,14 +33,11 @@ public class TeacherController : ControllerBase
             id = 2;
         //return Unauthorized();
 
-        var users = await _userService.GetTeachers(id!.Value, pageRequest.Page, pageRequest.Size);
+        var users = _userService.GetTeachers(id!.Value);
 
-        var page = new PageModel<TeacherDTO>(pageRequest)
-        {
-            Items = _mapper.Map<List<TeacherDTO>>(users)
-        };
+        var page = users.ToPagedList(pageRequest.Page, pageRequest.Size);
 
-        return Ok(page);
+        return Ok(page.Map<TeacherDTO>(_mapper));
     }
 
     [HttpGet("{id}")]

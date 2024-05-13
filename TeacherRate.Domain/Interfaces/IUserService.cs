@@ -5,8 +5,8 @@ namespace TeacherRate.Domain.Interfaces;
 
 public interface IUserService
 {
-    Task<List<Teacher>> GetTeachers(int headTeacherId, int index, int size);
-    Task<List<HeadTeacher>> GetHeadTeachers(int index, int size);
+    IQueryable<Teacher> GetTeachers(int headTeacherId);
+    IQueryable<HeadTeacher> GetHeadTeachers();
     Task<T?> GetUserById<T>(int id) where T : User;
     Task<User> UpdateUser(User user);
     Task RemoveUser(int id);

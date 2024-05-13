@@ -37,7 +37,7 @@ public class UserServiceTest
             };
             await userService.AddUser(user, StrongPassword);
         }
-        var users = await userService.GetHeadTeachers(0, 100);
+        var users = await userService.GetHeadTeachers().ToListAsync();
 
         Assert.Equal(Users.Count, users.Count);
     }

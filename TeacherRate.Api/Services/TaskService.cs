@@ -29,9 +29,9 @@ public class TaskService : ITaskService
         throw new NotImplementedException();
     }
 
-    public Task<List<UserTask>> GetTasks(int index, int size)
+    public IQueryable<UserTask> GetTasks()
     {
-        throw new NotImplementedException();
+        return _repository.GetAll<UserTask>();
     }
 
     public Task<List<CompletedTask>> GetUserTasks<T>(int id) where T : TeacherBase
