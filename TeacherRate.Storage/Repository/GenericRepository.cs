@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Formats.Asn1;
 using System.Linq.Expressions;
 using TeacherRate.Storage.Abstraction.Interfaces;
 
@@ -42,13 +41,13 @@ public class GenericRepository : IRepository
         return _context.Set<T>().SingleOrDefaultAsync(expression);
     }
 
-    public bool Remove<T>(int id) where T : class
+    public void Remove<T>(int id) where T : class
     {
         var entity = _context.Set<T>().Find(id);
-        if (entity is null) return false;
+        if (entity is null) 
+            throw new ArgumentException($"No entity in database with id: {id}", nameof(entity));
 
         _context.Set<T>().Remove(entity);
-        return true;
     }
 
     public async Task<int> SaveChanges()

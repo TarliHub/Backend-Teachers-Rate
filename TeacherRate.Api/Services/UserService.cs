@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TeacherRate.Domain.Exceptions;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 using TeacherRate.Helpers;

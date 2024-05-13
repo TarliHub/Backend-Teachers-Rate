@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TeacherRate.Api.Services;
-using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
-using TeacherRate.Storage;
-using TeacherRate.Storage.Repository;
 
 namespace TeacherRate.Tests;
 
@@ -40,5 +36,34 @@ public class UserServiceTest
         var users = await userService.GetHeadTeachers().ToListAsync();
 
         Assert.Equal(Users.Count, users.Count);
+    }
+
+    [Fact]
+    public async Task UserService_DeleteEntity_CorrectResult()
+    {
+        var userService = ServiceGenerator.GetUserService("UserServiceTestDB1");
+        HeadTeacher user = new HeadTeacher()
+        {
+            Email = "jhon@gmail.com",
+            Name = "Jhon",
+            LastName = "Doe",
+            MiddleName = "Jhonson",
+            CreatedAt = DateTime.Now
+        };
+
+        var userFromDb = await userService.AddUser(user, StrongPassword);
+        await userService.RemoveUser(userFromDb.Id);
+
+        Assert.Equal(0, userService.GetHeadTeachers().Count());
+    }
+
+    [Fact]
+    public async Task UserService_DeleteEntity_DeleteWithIncorrectId()
+    {
+        var userService = ServiceGenerator.GetUserService("UserServiceTestDB1");
+        
+        var exceptionHandler = async () => await userService.RemoveUser(100);
+
+        await Assert.ThrowsAsync<ArgumentException>(exceptionHandler);
     }
 }
