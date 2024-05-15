@@ -15,6 +15,12 @@ namespace TeacherRate.Storage.Migrations
                 table: "User",
                 type: "text",
                 nullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "Points",
+                table: "TeacherRequest",
+                type: "integer",
+                nullable: false);
         }
 
         /// <inheritdoc />
@@ -23,6 +29,10 @@ namespace TeacherRate.Storage.Migrations
             migrationBuilder.DropColumn(
                 name: "CommissionName",
                 table: "User");
+
+            migrationBuilder.DropColumn(
+                name: "Points",
+                table: "TeacherRequest");
         }
     }
 }

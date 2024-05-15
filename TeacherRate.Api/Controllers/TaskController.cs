@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using TeacherRate.Api.DTOs;
 using TeacherRate.Api.Models.Paging;
 using TeacherRate.Api.Models.Requests;
-using TeacherRate.Api.Services;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 namespace TeacherRate.Api.Controllers;
@@ -21,7 +20,7 @@ public class TaskController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet]
+    [HttpGet()]
     public async Task<ActionResult<PagedList<UserTaskDTO>>> GetUserTasks(
         [FromQuery] PageRequest pageRequest)
     {
@@ -31,7 +30,7 @@ public class TaskController : ControllerBase
         return Ok(page.Map<UserTaskDTO>(_mapper));
     }
 
-    [HttpGet]
+    [HttpGet("completed-tasks")]
     public async Task<ActionResult<PagedList<CompletedTaskDTO>>> GetCompletedUserTasks(
         [FromQuery] PageRequest pageRequest)
     {

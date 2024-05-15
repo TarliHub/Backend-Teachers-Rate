@@ -51,15 +51,27 @@ public class TaskService : ITaskService
         throw new NotImplementedException();
     }
 
-    public Task<bool> SendTask(TeacherRequest request)
+    public async Task<bool> SendTask(TeacherRequest request)
     {
-        throw new NotImplementedException();
-        //_repository.Add(request);
-        //var completedTask = new CompletedTask()
-        //{
-        //    Task = request.Task,
-        //    Points = request.Task.Points,
-        //}
+        try
+        {
+            _repository.Add(request);
+            var completedTask = new CompletedTask()
+            {
+                Task = request.Task,
+                Points = request.Points,
+                Count = 1,
+                Teacher = request.Teacher,
+            };
+
+            _repository.Add(completedTask);
+            await _repository.SaveChanges();
+            return true;
+        }
+        catch(Exception)
+        {
+            return false;
+        }
     }
 
     public Task<UserTask> UpdateTask(UserTask task)
