@@ -30,8 +30,7 @@ public class TeacherController : ControllerBase
     {
         var id = HttpContext.Session.GetInt32("UserId");
         if (!id.HasValue)
-            id = 2;
-        //return Unauthorized();
+            return Unauthorized();
 
         var users = _userService.GetTeachers(id!.Value);
 
@@ -54,6 +53,14 @@ public class TeacherController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TeacherDTO>> AddTeacher(CreateUserRequest request)
     {
+        var id = HttpContext.Session.GetInt32("UserId");
+        if (!id.HasValue)
+            return Unauthorized();
+
+        var headTeacher = await _userService.GetUserById<HeadTeacher>(id.Value);
+        if (headTeacher == null)
+            return NotFound("HeadTeacher not found");
+
         var user = new Teacher()
         {
             Name = request.Name,
@@ -61,6 +68,7 @@ public class TeacherController : ControllerBase
             MiddleName = request.MiddleName,
             Email = request.Email,
             CreatedAt = DateTime.UtcNow,
+            HeadTeacher = headTeacher,
         };
 
         var userFromDb = await _userService.AddUser(user, request.Password);
