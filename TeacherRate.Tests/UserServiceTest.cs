@@ -29,6 +29,7 @@ public class UserServiceTest
                 LastName = (string)obj[1],
                 MiddleName = (string)obj[2],
                 Email = (string)obj[3],
+                CommissionName = "",
                 CreatedAt = DateTime.UtcNow,
             };
             await userService.AddUser(user, StrongPassword);
@@ -48,6 +49,7 @@ public class UserServiceTest
             Name = "Jhon",
             LastName = "Doe",
             MiddleName = "Jhonson",
+            CommissionName = "",
             CreatedAt = DateTime.Now
         };
 

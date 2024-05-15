@@ -48,12 +48,16 @@ public class HeadTeacherController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<HeadTeacherDTO>> AddHeadTeacher(CreateUserRequest request)
     {
+        if (request.CommissionName == null)
+            return BadRequest("Commission name must be specified");
+
         var user = new HeadTeacher() {
             Name = request.Name,
             LastName = request.LastName,
             MiddleName = request.MiddleName,
             Email = request.Email,
             CreatedAt = DateTime.UtcNow,
+            CommissionName = request.CommissionName,
         };
 
         var userFromDb = await _userService.AddUser(user, request.Password);

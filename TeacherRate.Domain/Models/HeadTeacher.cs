@@ -7,5 +7,7 @@ public class HeadTeacher : TeacherBase
         Role = Role.HeadTeacher;
     }
 
+    public required string CommissionName { get; set; }
+
     public virtual ICollection<Teacher> Teachers { get; set; } = null!;
 }

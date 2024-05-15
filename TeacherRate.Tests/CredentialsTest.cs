@@ -60,6 +60,7 @@ public class CredentialsTest
             Name = "Jhon",
             LastName = "Doe",
             MiddleName = "Jhonson",
+            CommissionName = "",
             CreatedAt = DateTime.Now,
             Teachers = new List<Teacher>{ user1, user2 }
         };
