@@ -25,7 +25,7 @@ public class TeacherController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<ActionResult<PagedList<TeacherDTO>>> GetTeachers(
+    public async Task<ActionResult<PagedList<TeacherWithHeadTeacherDTO>>> GetTeachers(
         [FromQuery] PageRequest pageRequest)
     {
         var id = HttpContext.Session.GetInt32("UserId");
@@ -36,22 +36,22 @@ public class TeacherController : ControllerBase
 
         var page = users.ToPagedList(pageRequest.Page, pageRequest.Size);
 
-        return Ok(page.Map<TeacherDTO>(_mapper));
+        return Ok(page.Map<TeacherWithHeadTeacherDTO>(_mapper));
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<TeacherDTO>> GetTeacherById(int id)
+    public async Task<ActionResult<TeacherWithHeadTeacherDTO>> GetTeacherById(int id)
     {
         var user = await _userService.GetUserById<Teacher>(id);
 
         if (user is null)
             return NotFound("Teacher not found");
 
-        return Ok(_mapper.Map<TeacherDTO>(user));
+        return Ok(_mapper.Map<TeacherWithHeadTeacherDTO>(user));
     }
 
     [HttpPost]
-    public async Task<ActionResult<TeacherDTO>> AddTeacher(CreateUserRequest request)
+    public async Task<ActionResult<TeacherWithHeadTeacherDTO>> AddTeacher(CreateUserRequest request)
     {
         var id = HttpContext.Session.GetInt32("UserId");
         if (!id.HasValue)
@@ -73,7 +73,7 @@ public class TeacherController : ControllerBase
 
         var userFromDb = await _userService.AddUser(user, request.Password);
 
-        return Created(string.Empty, _mapper.Map<TeacherDTO>(userFromDb));
+        return Created(string.Empty, _mapper.Map<TeacherWithHeadTeacherDTO>(userFromDb));
     }
 
     [HttpPut]

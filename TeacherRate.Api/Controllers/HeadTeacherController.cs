@@ -24,25 +24,25 @@ public class HeadTeacherController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<ActionResult<PagedList<HeadTeacherDTO>>> GetHeadTeachers(
+    public async Task<ActionResult<PagedList<HeadTeacherWithTeachersDTO>>> GetHeadTeachers(
         [FromQuery] PageRequest pageRequest)
     {
         var users = _userService.GetHeadTeachers();
 
         var page = users.ToPagedList(pageRequest.Page, pageRequest.Size);
 
-        return Ok(page.Map<HeadTeacherDTO>(_mapper));
+        return Ok(page.Map<HeadTeacherWithTeachersDTO>(_mapper));
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<HeadTeacherDTO>> GetHeadTeacherById(int id)
+    public async Task<ActionResult<HeadTeacherWithTeachersDTO>> GetHeadTeacherById(int id)
     {
         var user = await _userService.GetUserById<HeadTeacher>(id);
 
         if (user is null)
             return NotFound("Head teacher not found");
 
-        return Ok(_mapper.Map<HeadTeacherDTO>(user));
+        return Ok(_mapper.Map<HeadTeacherWithTeachersDTO>(user));
     }
 
     [HttpPost]

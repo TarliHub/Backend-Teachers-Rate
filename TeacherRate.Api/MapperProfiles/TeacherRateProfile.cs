@@ -23,6 +23,8 @@ public class TeacherRateProfile : Profile
             .ForMember(dest => dest.TaskId, act => act.MapFrom(src => src.Task.Id))
             .ReverseMap();
         CreateMap<Teacher, TeacherDTO>().ReverseMap();
+        CreateMap<Teacher, TeacherWithHeadTeacherDTO>().ReverseMap();
         CreateMap<HeadTeacher, HeadTeacherDTO>().ReverseMap();
+        CreateMap<HeadTeacher, HeadTeacherWithTeachersDTO>().ReverseMap();
     }
 }
