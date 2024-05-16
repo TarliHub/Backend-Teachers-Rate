@@ -15,17 +15,19 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _contextAccessor;
 
-    public AuthController(IMapper mapper, IAuthService authService)
+    public AuthController(IMapper mapper, IAuthService authService, IHttpContextAccessor contextAccessor)
     {
         _mapper = mapper;
         _authService = authService;
+        _contextAccessor = contextAccessor;
     }
 
     [HttpGet("me"), Authorize]
     public async Task<ActionResult<UserDTO>> GetUserInfo()
     {
-        var id = HttpContext.Session.GetInt32("UserId");
+        var id = _contextAccessor.HttpContext?.Session.GetInt32("UserId");
         if (!id.HasValue)
         {
             return Unauthorized();
@@ -40,15 +42,22 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<UserDTO>> Login([FromBody] LoginRequest request)
     {
-        var authData = await _authService.Login(request.Email, request.Password);
-
-        HttpContext.Session.SetInt32("UserId", authData.UserId);
-
-        return Ok(new LoginResponse()
+        try
         {
-            Token = authData.Token,
-            Role = authData.Role,
-        });
+            var authData = await _authService.Login(request.Email, request.Password);
+
+            _contextAccessor.HttpContext?.Session.SetInt32("UserId", authData.UserId);
+
+            return Ok(new LoginResponse()
+            {
+                Token = authData.Token,
+                Role = authData.Role,
+            });
+        }
+        catch(ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost("createAdmin")]

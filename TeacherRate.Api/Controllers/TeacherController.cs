@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TeacherRate.Api.DTOs;
 using TeacherRate.Api.Models.Requests;
-using TeacherRate.Api.Models;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -17,20 +16,22 @@ public class TeacherController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public TeacherController(IUserService userService, IMapper mapper)
+    public TeacherController(IUserService userService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     {
         _userService = userService;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpGet()]
     public async Task<ActionResult<PagedList<TeacherWithHeadTeacherDTO>>> GetTeachers(
         [FromQuery] PageRequest pageRequest)
     {
-        var id = HttpContext.Session.GetInt32("UserId");
+        var id = _httpContextAccessor.HttpContext?.Session.GetInt32("UserId");
         if (!id.HasValue)
-            return Unauthorized();
+            return Unauthorized("session id has expired");
 
         var users = _userService.GetTeachers(id!.Value);
 
@@ -53,9 +54,9 @@ public class TeacherController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TeacherWithHeadTeacherDTO>> AddTeacher(CreateUserRequest request)
     {
-        var id = HttpContext.Session.GetInt32("UserId");
+        var id = _httpContextAccessor.HttpContext?.Session.GetInt32("UserId");
         if (!id.HasValue)
-            return Unauthorized();
+            return Unauthorized("session id has expired");
 
         var headTeacher = await _userService.GetUserById<HeadTeacher>(id.Value);
         if (headTeacher == null)

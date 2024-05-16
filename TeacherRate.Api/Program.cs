@@ -17,6 +17,7 @@ public class Program
         builder.Configuration.AddJsonFile(
             $"appsettings.{Environment.GetEnvironmentVariable("APP_SETTINGS") ?? "Development"}.json");
         builder.Services.AddControllers();
+        builder.Services.AddHttpContextAccessor();
         builder.Services.AddDependencies();
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -50,7 +51,6 @@ public class Program
                             .AllowAnyHeader();
                 });
         });
-
         builder.Services.AddDbContext<TeacherRateContext>(
             options => {
                 var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
