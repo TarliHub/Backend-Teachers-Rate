@@ -22,12 +22,13 @@ public static class ServicesConfigurationExtension
     {
         return services
             .AddBuilder(builder)
-            .AddMapperProfile()
-            .AddSession()
+            //.AddSession()
+            .AddHttpContextAccessor()
             .AddCors()
             .AddAuthentication()
             .AddDbContext()
             .AddServices()
+            .AddMapperProfile()
             .AddControllersWithSwagger();
     }
 
@@ -73,12 +74,10 @@ public static class ServicesConfigurationExtension
     {
         return services.AddCors(options =>
         {
-            options.AddPolicy("AllowAnyOrigin",
-                policy =>
-                    policy.SetIsOriginAllowed(origin => true)
+            options.AddDefaultPolicy(policy =>
+                    policy.AllowAnyOrigin()
                             .AllowAnyMethod()
                             .AllowAnyHeader()
-                            .AllowCredentials()
                 );
         });
     }
@@ -86,18 +85,12 @@ public static class ServicesConfigurationExtension
     public static IServiceCollection AddSession(this IServiceCollection services)
     {
         services.AddDistributedMemoryCache();
-        services.AddSession(options =>
+        return services.AddSession(options =>
         {
             options.IdleTimeout = TimeSpan.FromMinutes(
                 int.Parse(_builder?.Configuration.GetSection("AppSettings:ExpireTime").Value ?? "3600"));
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        });
-        return services.Configure<CookiePolicyOptions>(options =>
-        {
-            options.CheckConsentNeeded = context => false;
-            options.MinimumSameSitePolicy = SameSiteMode.None;
         });
     }
 

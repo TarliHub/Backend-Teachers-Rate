@@ -6,6 +6,7 @@ using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using TeacherRate.Api.Models.Paging;
+using System.Security.Claims;
 
 namespace TeacherRate.Api.Controllers;
 
@@ -16,22 +17,22 @@ public class TeacherController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public TeacherController(IUserService userService, IMapper mapper)
+    public TeacherController(IUserService userService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     {
         _userService = userService;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpGet()]
     public async Task<ActionResult<PagedList<TeacherWithHeadTeacherDTO>>> GetTeachers(
         [FromQuery] PageRequest pageRequest)
     {
-        var id = HttpContext?.Session.GetInt32("UserId");
-        if (!id.HasValue)
-            return Unauthorized("session id has expired");
+        var id = TryGetIdFromToken();
 
-        var users = _userService.GetTeachers(id!.Value);
+        var users = _userService.GetTeachers(id);
 
         var page = users.ToPagedList(pageRequest.Page, pageRequest.Size);
 
@@ -52,11 +53,9 @@ public class TeacherController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TeacherWithHeadTeacherDTO>> AddTeacher(CreateUserRequest request)
     {
-        var id = HttpContext?.Session.GetInt32("UserId");
-        if (!id.HasValue)
-            return Unauthorized("session id has expired");
+        var id = TryGetIdFromToken();
 
-        var headTeacher = await _userService.GetUserById<HeadTeacher>(id.Value);
+        var headTeacher = await _userService.GetUserById<HeadTeacher>(id);
         if (headTeacher == null)
             return NotFound("HeadTeacher not found");
 
@@ -89,5 +88,14 @@ public class TeacherController : ControllerBase
         await _userService.RemoveUser(id);
 
         return NoContent();
+    }
+
+    private int TryGetIdFromToken()
+    {
+        var identifier = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (identifier == null)
+            throw new UnauthorizedAccessException("token does not contain id");
+
+        return int.Parse(identifier);
     }
 }

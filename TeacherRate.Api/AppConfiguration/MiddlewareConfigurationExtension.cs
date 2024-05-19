@@ -11,11 +11,11 @@ public static class MiddlewareConfigurationExtension
             app.UseSwaggerUI();
         }
 
-        app.UseCors("AllowAnyOrigin");
+        app.UseCors();
 
-        app.UseCookiePolicy();
+        app.UseHttpsRedirection();
 
-        app.UseSession();
+        //app.UseSession();
 
         app.UseAuthentication();
 
