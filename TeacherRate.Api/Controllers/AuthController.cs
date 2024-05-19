@@ -15,19 +15,17 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly IMapper _mapper;
-    private readonly IHttpContextAccessor _contextAccessor;
 
-    public AuthController(IMapper mapper, IAuthService authService, IHttpContextAccessor contextAccessor)
+    public AuthController(IMapper mapper, IAuthService authService)
     {
         _mapper = mapper;
         _authService = authService;
-        _contextAccessor = contextAccessor;
     }
 
     [HttpGet("me"), Authorize]
     public async Task<ActionResult<UserDTO>> GetUserInfo()
     {
-        var id = _contextAccessor.HttpContext?.Session.GetInt32("UserId");
+        var id = HttpContext?.Session.GetInt32("UserId");
         if (!id.HasValue)
         {
             return Unauthorized();
@@ -46,7 +44,7 @@ public class AuthController : ControllerBase
         {
             var authData = await _authService.Login(request.Email, request.Password);
 
-            _contextAccessor.HttpContext?.Session.SetInt32("UserId", authData.UserId);
+            HttpContext?.Session.SetInt32("UserId", authData.UserId);
 
             return Ok(new LoginResponse()
             {

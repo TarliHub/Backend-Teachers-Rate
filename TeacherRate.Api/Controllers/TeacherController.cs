@@ -16,20 +16,18 @@ public class TeacherController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IMapper _mapper;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public TeacherController(IUserService userService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+    public TeacherController(IUserService userService, IMapper mapper)
     {
         _userService = userService;
         _mapper = mapper;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpGet()]
     public async Task<ActionResult<PagedList<TeacherWithHeadTeacherDTO>>> GetTeachers(
         [FromQuery] PageRequest pageRequest)
     {
-        var id = _httpContextAccessor.HttpContext?.Session.GetInt32("UserId");
+        var id = HttpContext?.Session.GetInt32("UserId");
         if (!id.HasValue)
             return Unauthorized("session id has expired");
 
@@ -54,7 +52,7 @@ public class TeacherController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TeacherWithHeadTeacherDTO>> AddTeacher(CreateUserRequest request)
     {
-        var id = _httpContextAccessor.HttpContext?.Session.GetInt32("UserId");
+        var id = HttpContext?.Session.GetInt32("UserId");
         if (!id.HasValue)
             return Unauthorized("session id has expired");
 
