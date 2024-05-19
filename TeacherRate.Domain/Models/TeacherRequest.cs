@@ -8,4 +8,5 @@ public class TeacherRequest
     public required string ApprovalLink { get; set; }
     public string? Description { get; set; }
     public virtual User Reviewer { get; set; } = null!;
+    public int Points { get; set; }
 }

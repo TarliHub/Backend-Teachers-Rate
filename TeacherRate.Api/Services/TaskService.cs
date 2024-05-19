@@ -14,19 +14,22 @@ public class TaskService : ITaskService
         _repository = repository;
     }
 
-    public Task<UserTask> AddTask(UserTask task)
+    public async Task<UserTask> AddTask(UserTask task)
     {
-        throw new NotImplementedException();
-    }
+        if(task.Category ==  null) 
+            throw new ArgumentNullException("Category must not be null", nameof(task.Category));
 
-    public Task<List<CompletedTask>> GetCompletedTasks(int index, int size)
-    {
-        throw new NotImplementedException();
+        if(string.IsNullOrEmpty(task.Title))
+            throw new ArgumentNullException("Title must not be empty", nameof(task.Title));
+
+        var entity = _repository.Add(task);
+        await _repository.SaveChanges();
+        return entity;
     }
 
     public Task<UserTask?> GetTaskById(int id)
     {
-        throw new NotImplementedException();
+        return _repository.GetById<UserTask>(id);
     }
 
     public IQueryable<UserTask> GetTasks()
@@ -34,9 +37,13 @@ public class TaskService : ITaskService
         return _repository.GetAll<UserTask>();
     }
 
-    public Task<List<CompletedTask>> GetUserTasks<T>(int id) where T : TeacherBase
+    public async Task<IQueryable<CompletedTask>> GetUserTasks<T>(int id) where T : TeacherBase
     {
-        throw new NotImplementedException();
+        var user = await _repository.GetById<T>(id);
+        if (user == null)
+            throw new ArgumentException($"User not found with id {id}", nameof(id));
+
+        return user.Tasks.AsQueryable();
     }
 
     public Task RemoveTask(int id)
@@ -44,9 +51,27 @@ public class TaskService : ITaskService
         throw new NotImplementedException();
     }
 
-    public Task<bool> SendTask(TeacherRequest request)
+    public async Task<bool> SendTask(TeacherRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _repository.Add(request);
+            var completedTask = new CompletedTask()
+            {
+                Task = request.Task,
+                Points = request.Points,
+                Count = 1,
+                Teacher = request.Teacher,
+            };
+
+            _repository.Add(completedTask);
+            await _repository.SaveChanges();
+            return true;
+        }
+        catch(Exception)
+        {
+            return false;
+        }
     }
 
     public Task<UserTask> UpdateTask(UserTask task)
