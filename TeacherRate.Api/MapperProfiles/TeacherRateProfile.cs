@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using TeacherRate.Api.DTOs;
-using TeacherRate.Api.Models.Paging;
 using TeacherRate.Domain.Models;
 
 namespace TeacherRate.Api.MapperProfiles;

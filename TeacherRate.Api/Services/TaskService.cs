@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TeacherRate.Domain.Interfaces;
+﻿using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 using TeacherRate.Storage.Abstraction.Interfaces;
 
@@ -14,14 +13,17 @@ public class TaskService : ITaskService
         _repository = repository;
     }
 
-    public async Task<UserTask> AddTask(UserTask task)
+    public async Task<UserTask> AddTask(UserTask task, int categoryId)
     {
-        if(task.Category ==  null) 
-            throw new ArgumentNullException("Category must not be null", nameof(task.Category));
+        var category = await _repository.GetById<TaskCategory>(categoryId);
+
+        if(category == null) 
+            throw new ArgumentNullException("Category must not be null", nameof(category));
 
         if(string.IsNullOrEmpty(task.Title))
             throw new ArgumentNullException("Title must not be empty", nameof(task.Title));
 
+        task.Category = category;
         var entity = _repository.Add(task);
         await _repository.SaveChanges();
         return entity;

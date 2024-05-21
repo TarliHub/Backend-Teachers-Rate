@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeacherRate.Api.DTOs;
 using TeacherRate.Api.Models.Paging;
@@ -53,12 +54,19 @@ public class TaskController : ControllerBase
         return Ok(_mapper.Map<UserTaskDTO>(task));
     }
 
-    [HttpPost]
-    public async Task<ActionResult<UserTaskDTO>> AddUserTask(UserTaskDTO userTaskDTO)
+    [HttpPost, Authorize(Roles = "Admin")]
+    public async Task<ActionResult<UserTaskDTO>> AddUserTask(CreateTaskRequest request)
     {
-        var task = await _taskService.AddTask(_mapper.Map<UserTask>(userTaskDTO));
+        var task = new UserTask()
+        {
+            Approval = request.Approval,
+            Title = request.Title,
+            Points = request.Points,
+            PointsDescription = request.PointsDescription
+        };
+        var taskFromDb = await _taskService.AddTask(task, request.CategoryId);
 
-        return Ok(_mapper.Map<UserTaskDTO>(task));
+        return Ok(_mapper.Map<UserTaskDTO>(taskFromDb));
     }
 
 

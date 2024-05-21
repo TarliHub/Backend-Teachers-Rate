@@ -8,7 +8,7 @@ public interface ITaskService
     IQueryable<UserTask> GetTasks();
     Task<IQueryable<CompletedTask>> GetUserTasks<T>(int id) where T : TeacherBase;
     Task<UserTask?> GetTaskById(int id);
-    Task<UserTask> AddTask(UserTask task);
+    Task<UserTask> AddTask(UserTask task, int categoryId);
     Task RemoveTask(int id);
     Task<UserTask> UpdateTask(UserTask task);
 }
