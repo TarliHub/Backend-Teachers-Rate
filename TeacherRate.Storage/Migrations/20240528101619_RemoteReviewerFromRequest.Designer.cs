@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TeacherRate.Storage;
@@ -12,9 +13,11 @@ using TeacherRate.Storage;
 namespace TeacherRate.Storage.Migrations
 {
     [DbContext(typeof(TeacherRateContext))]
-    partial class TeacherRateContextModelSnapshot : ModelSnapshot
+    [Migration("20240528101619_RemoteReviewerFromRequest")]
+    partial class RemoteReviewerFromRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

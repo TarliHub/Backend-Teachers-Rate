@@ -7,6 +7,7 @@ using TeacherRate.Api.Models.Requests;
 using TeacherRate.Api.Models.Responses;
 using TeacherRate.Api.Services;
 using TeacherRate.Domain.Interfaces;
+using TeacherRate.Domain.Models;
 
 namespace TeacherRate.Api.Controllers;
 
@@ -25,6 +26,17 @@ public class AuthController : ControllerBase
         _httpContextAccessor = httpContextAccessor;
     }
 
+    [HttpGet("rate"), Authorize]
+    public async Task<ActionResult<TeacherBaseDTO>> GetRateInfo()
+    {
+        var id = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (id == null)
+            return Unauthorized("token does not contain id");
+
+        var user = await _authService.GetMe(int.Parse(id));
+        return Ok(_mapper.Map<TeacherBaseDTO>(user as TeacherBase));
+    }
+
     [HttpGet("me"), Authorize]
     public async Task<ActionResult<UserDTO>> GetUserInfo()
     {
@@ -36,7 +48,7 @@ public class AuthController : ControllerBase
         return Ok(_mapper.Map<UserDTO>(user));
     }
 
-    //admin: admin@admin.com pass: admin
+    //admin: a@a.com pass: a
 
     [HttpPost("login")]
     public async Task<ActionResult<UserDTO>> Login([FromBody] LoginRequest request)

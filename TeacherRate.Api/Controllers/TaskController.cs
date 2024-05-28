@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TeacherRate.Api.DTOs;
 using TeacherRate.Api.Models.Paging;
 using TeacherRate.Api.Models.Requests;
@@ -9,16 +10,19 @@ using TeacherRate.Domain.Models;
 namespace TeacherRate.Api.Controllers;
 
 [Route("api/tasks")]
+[Authorize]
 [ApiController]
 public class TaskController : ControllerBase
 {
     private readonly ITaskService _taskService;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public TaskController(ITaskService taskService, IMapper mapper)
+    public TaskController(ITaskService taskService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     {
         _taskService = taskService;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpGet()]
@@ -35,11 +39,24 @@ public class TaskController : ControllerBase
     public async Task<ActionResult<PagedList<CompletedTaskDTO>>> GetCompletedUserTasks(
         [FromQuery] PageRequest pageRequest)
     {
-        var id = HttpContext.Session.GetInt32("UserId");
-        if (!id.HasValue)
-            return Unauthorized();
+        var identifier = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (identifier == null)
+            return Unauthorized("token does not contain id");
 
-        var tasks = await _taskService.GetUserTasks<TeacherBase>(id.Value);
+        int id = int.Parse(identifier);
+
+        var tasks = await _taskService.GetUserTasks<TeacherBase>(id);
+
+        var page = tasks.ToPagedList(pageRequest.Page, pageRequest.Size);
+
+        return Ok(page.Map<CompletedTaskDTO>(_mapper));
+    }
+
+    [HttpGet("completed-tasks/{id}")]
+    public async Task<ActionResult<PagedList<CompletedTaskDTO>>> GetCompletedUserTasksById(
+        int id, [FromQuery] PageRequest pageRequest)
+    {
+        var tasks = await _taskService.GetUserTasks<TeacherBase>(id);
 
         var page = tasks.ToPagedList(pageRequest.Page, pageRequest.Size);
 
@@ -52,6 +69,20 @@ public class TaskController : ControllerBase
         var task = await _taskService.GetTaskById(id);
 
         return Ok(_mapper.Map<UserTaskDTO>(task));
+    }
+
+    [HttpPost("send-request")]
+    public async Task<ActionResult<bool>> SendRequest(TeacherRequestDTO requestDTO)
+    {
+        var identifier = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (identifier == null)
+            return Unauthorized("token does not contain id");
+
+        int id = int.Parse(identifier);
+
+        var request = _mapper.Map<TeacherRequest>(requestDTO);
+
+        return Ok(await _taskService.SendTask(request, id));
     }
 
     [HttpPost, Authorize(Roles = "Admin")]

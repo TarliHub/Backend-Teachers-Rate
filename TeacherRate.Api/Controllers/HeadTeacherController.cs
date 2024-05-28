@@ -45,6 +45,17 @@ public class HeadTeacherController : ControllerBase
         return Ok(_mapper.Map<HeadTeacherWithTeachersDTO>(user));
     }
 
+    [HttpGet("{id}/completed-tasks"), Authorize(Roles = "Admin,HeadTeacher")]
+    public async Task<ActionResult<PagedList<CompletedTaskDTO>>> GetHeadTeacherCompletedTasks(
+        int id, [FromQuery] PageRequest pageRequest)
+    {
+        var tasks = _userService.GetCompletedTasks(id);
+
+        var page = tasks.ToPagedList(pageRequest.Page, pageRequest.Size);
+
+        return Ok(page.Map<CompletedTaskDTO>(_mapper));
+    }
+
     [HttpPost]
     public async Task<ActionResult<HeadTeacherDTO>> AddHeadTeacher(CreateUserRequest request)
     {

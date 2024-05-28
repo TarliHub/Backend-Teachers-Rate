@@ -7,6 +7,7 @@ public interface IUserService
 {
     IQueryable<Teacher> GetTeachers(int headTeacherId);
     IQueryable<HeadTeacher> GetHeadTeachers();
+    IQueryable<CompletedTask> GetCompletedTasks(int userId);
     Task<T?> GetUserById<T>(int id) where T : User;
     Task<User> UpdateUser(User user);
     Task RemoveUser(int id);

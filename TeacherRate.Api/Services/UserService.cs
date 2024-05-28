@@ -59,4 +59,9 @@ public class UserService : IUserService
     {
         return _repository.GetAll<Teacher>().Where(t => t.HeadTeacher.Id == headTeacherId);
     }
+
+    public IQueryable<CompletedTask> GetCompletedTasks(int userId)
+    {
+        return _repository.GetAll<CompletedTask>().Where(t => t.Teacher.Id == userId);
+    }
 }

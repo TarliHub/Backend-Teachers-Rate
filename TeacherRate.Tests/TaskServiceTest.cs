@@ -17,7 +17,7 @@ public class TaskServiceTest
         };
         var service = ServiceGenerator.GetTaskService("TaskServiceDbTest1");
 
-        await service.AddTask(task);
+        await service.AddTask(task, 1);
         int count = service.GetTasks().Count();
 
         Assert.Equal(1, count);

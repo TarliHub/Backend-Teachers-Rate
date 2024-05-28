@@ -53,17 +53,22 @@ public class TaskService : ITaskService
         throw new NotImplementedException();
     }
 
-    public async Task<bool> SendTask(TeacherRequest request)
+    public async Task<bool> SendTask(TeacherRequest request, int teacherId)
     {
         try
         {
+            var task = await _repository.GetById<UserTask>(request.Task.Id);
+            var teacher = await _repository.GetById<TeacherBase>(teacherId);
+            request.Task = task;
+            request.Teacher = teacher;
             _repository.Add(request);
+
             var completedTask = new CompletedTask()
             {
-                Task = request.Task,
+                Task = task,
                 Points = request.Points,
                 Count = 1,
-                Teacher = request.Teacher,
+                Teacher = teacher,
             };
 
             _repository.Add(completedTask);
