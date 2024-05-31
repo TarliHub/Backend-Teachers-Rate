@@ -11,7 +11,7 @@ using System.Security.Claims;
 namespace TeacherRate.Api.Controllers;
 
 [Route("api/teachers")]
-[Authorize(Roles = "HeadTeacher")]
+[Authorize(Roles = "HeadTeacher, Admin")]
 [ApiController]
 public class TeacherController : ControllerBase
 {

@@ -18,10 +18,9 @@ namespace TeacherRate.Storage.Migrations
                 name: "IX_TeacherRequest_ReviewerId",
                 table: "TeacherRequest");
 
-            migrationBuilder.RenameColumn(
+            migrationBuilder.DropColumn(
                 name: "ReviewerId",
-                table: "TeacherRequest",
-                newName: "Points");
+                table: "TeacherRequest");
         }
 
         /// <inheritdoc />

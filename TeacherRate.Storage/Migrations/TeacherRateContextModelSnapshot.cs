@@ -52,7 +52,7 @@ namespace TeacherRate.Storage.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("CompletedTask");
+                    b.ToTable("CompletedTask", (string)null);
                 });
 
             modelBuilder.Entity("TeacherRate.Domain.Models.CredentialsInfo", b =>
@@ -74,7 +74,7 @@ namespace TeacherRate.Storage.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CredentialsInfo");
+                    b.ToTable("CredentialsInfo", (string)null);
                 });
 
             modelBuilder.Entity("TeacherRate.Domain.Models.TaskCategory", b =>
@@ -92,7 +92,7 @@ namespace TeacherRate.Storage.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TaskCategory");
+                    b.ToTable("TaskCategory", (string)null);
                 });
 
             modelBuilder.Entity("TeacherRate.Domain.Models.TeacherRequest", b =>
@@ -125,7 +125,7 @@ namespace TeacherRate.Storage.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("TeacherRequest");
+                    b.ToTable("TeacherRequest", (string)null);
                 });
 
             modelBuilder.Entity("TeacherRate.Domain.Models.User", b =>
@@ -169,7 +169,7 @@ namespace TeacherRate.Storage.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("User");
 
@@ -207,7 +207,7 @@ namespace TeacherRate.Storage.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("UserTask");
+                    b.ToTable("UserTask", (string)null);
                 });
 
             modelBuilder.Entity("TeacherRate.Domain.Models.TeacherBase", b =>
