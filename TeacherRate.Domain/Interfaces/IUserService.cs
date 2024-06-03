@@ -9,7 +9,7 @@ public interface IUserService
     IQueryable<HeadTeacher> GetHeadTeachers();
     IQueryable<CompletedTask> GetCompletedTasks(int userId);
     Task<T?> GetUserById<T>(int id) where T : User;
-    Task<User> UpdateUser(User user);
+    Task<User> UpdateUser(User user, string password);
     Task RemoveUser(int id);
     Task<User> AddUser(User user, string password);
 }

@@ -29,6 +29,16 @@ public class TaskService : ITaskService
         return entity;
     }
 
+    public async Task DeleteAllCompletedTasks()
+    {
+        var completedTasks = _repository.GetAll<CompletedTask>();
+        foreach(var completedTask in completedTasks)
+        {
+            _repository.Remove<CompletedTask>(completedTask.Id);
+        }
+        await _repository.SaveChanges();
+    }
+
     public Task<UserTask?> GetTaskById(int id)
     {
         return _repository.GetById<UserTask>(id);
@@ -48,9 +58,10 @@ public class TaskService : ITaskService
         return user.Tasks.AsQueryable();
     }
 
-    public Task RemoveTask(int id)
+    public async Task RemoveTask(int id)
     {
-        throw new NotImplementedException();
+        _repository.Remove<UserTask>(id);
+        await _repository.SaveChanges();
     }
 
     public async Task<bool> SendTask(TeacherRequest request, int teacherId)
@@ -81,8 +92,10 @@ public class TaskService : ITaskService
         }
     }
 
-    public Task<UserTask> UpdateTask(UserTask task)
+    public async Task<UserTask> UpdateTask(UserTask task)
     {
-        throw new NotImplementedException();
+        var entity = _repository.Update(task);
+        await _repository.SaveChanges();
+        return entity;
     }
 }

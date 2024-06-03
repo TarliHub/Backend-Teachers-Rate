@@ -7,4 +7,5 @@ public interface ICategoryService
     Task<TaskCategory> AddCategory(TaskCategory category);
     IQueryable<TaskCategory> GetCategories();
     Task<TaskCategory?> GetCategoryById(int id);
+    Task DeleteCategory(int id);
 }

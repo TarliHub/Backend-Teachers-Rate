@@ -74,10 +74,18 @@ public class TeacherController : ControllerBase
         return Created(string.Empty, _mapper.Map<TeacherWithHeadTeacherDTO>(userFromDb));
     }
 
-    [HttpPut]
-    public async Task<ActionResult<TeacherDTO>> UpdateTeacher(TeacherDTO user)
+    [HttpPut("{id}")]
+    public async Task<ActionResult<TeacherDTO>> UpdateTeacher(int id, CreateUserRequest request)
     {
-        var userFromDb = await _userService.UpdateUser(_mapper.Map<Teacher>(user));
+        var user = await _userService.GetUserById<Teacher>(id);
+        if (user == null)
+            return NotFound($"user with id {id} not found.");
+
+        user.Name = request.Name;
+        user.LastName = request.LastName;
+        user.MiddleName = request.MiddleName;
+        user.Email = request.Email;
+        var userFromDb = await _userService.UpdateUser(user, request.Password);
 
         return Ok(_mapper.Map<TeacherDTO>(userFromDb));
     }

@@ -24,6 +24,12 @@ public class CategoryService : ICategoryService
         return categoryFromDb;
     }
 
+    public async Task DeleteCategory(int id)
+    {
+        _repository.Remove<TaskCategory>(id);
+        await _repository.SaveChanges();
+    }
+
     public IQueryable<TaskCategory> GetCategories()
     {
         return _repository.GetAll<TaskCategory>();

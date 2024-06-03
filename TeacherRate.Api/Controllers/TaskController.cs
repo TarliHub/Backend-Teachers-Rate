@@ -100,5 +100,33 @@ public class TaskController : ControllerBase
         return Ok(_mapper.Map<UserTaskDTO>(taskFromDb));
     }
 
+    [HttpDelete("deleteAll"), Authorize(Roles = "Admin")]
+    public async Task<ActionResult> DeleteAllCompletedTasks()
+    {
+        await _taskService.DeleteAllCompletedTasks();
+        return NoContent();
+    }
 
+    [HttpPut("{id}")]
+    public async Task<ActionResult<UserTaskDTO>> UpdateTask(int id, CreateTaskRequest request)
+    {
+        var task = await _taskService.GetTaskById(id);
+        if(task == null)
+            return NotFound($"Task with id {id} not found.");
+
+        task.Approval = request.Approval;
+        task.Title = request.Title;
+        task.Points = request.Points;
+        task.PointsDescription = request.PointsDescription;
+        
+        var taskFromDb = await _taskService.UpdateTask(task);
+        return _mapper.Map<UserTaskDTO>(taskFromDb);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteTask(int id)
+    {
+        await _taskService.RemoveTask(id);
+        return NoContent();
+    }
 }

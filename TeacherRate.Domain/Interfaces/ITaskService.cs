@@ -11,4 +11,5 @@ public interface ITaskService
     Task<UserTask> AddTask(UserTask task, int categoryId);
     Task RemoveTask(int id);
     Task<UserTask> UpdateTask(UserTask task);
+    Task DeleteAllCompletedTasks();
 }

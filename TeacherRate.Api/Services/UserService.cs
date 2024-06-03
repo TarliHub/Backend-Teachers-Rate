@@ -43,9 +43,16 @@ public class UserService : IUserService
         await _repository.SaveChanges();
     }
 
-    public async Task<User> UpdateUser(User user)
+    public async Task<User> UpdateUser(User user, string password)
     {
         var entity = _repository.Update(user);
+        var creds = await _repository.QueryOne<CredentialsInfo>(creds => creds.User.Id == user.Id);
+        var passwordHash = PasswordManager.ComputeHashPassword(password);
+        if(creds.PasswordHash != passwordHash)
+        {
+            creds.PasswordHash = passwordHash;
+            _repository.Update(creds);
+        }
         await _repository.SaveChanges();
         return entity;
     }

@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TeacherRate.Api.DTOs;
 using TeacherRate.Api.Models.Paging;
 using TeacherRate.Api.Models.Requests;
-using TeacherRate.Api.Services;
 using TeacherRate.Domain.Interfaces;
 using TeacherRate.Domain.Models;
 
@@ -52,5 +50,12 @@ public class CategoryController : ControllerBase
         var category = new TaskCategory() { Name = request.Name };
         var categoryFromDb = await _categoryService.AddCategory(category);
         return Ok(_mapper.Map<TaskCategoryDTO>(categoryFromDb));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteCategory(int id)
+    {
+        await _categoryService.DeleteCategory(id);
+        return NoContent();
     }
 }
